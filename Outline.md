@@ -53,25 +53,6 @@ In this whiteboard design session, you will work with a group to design a soluti
 
 At the end of this whiteboard design session, you will be better able to design a highly scalable, managed open source database solution that can simultaneously handle real-time data and roll-up and serve data for advanced visualizations.
 
-#### Outline: Key concerns for Customer situation
-
-Client needs:
-
-1. Need distributed storage available to all nodes of the container: The storage can disappear when the Container is removed, and other Containers and technologies can't access storage easily within a Container.
-2. Require a data lake to easily store and access disparate data.
-3. Simplified programming surface to prepare data and do data science.
-4. Scale data systems to reach more consumers.
-5. Unlock business insights from multiple sources of structured and unstructured data.
-6. Apply deep analytics with high-performance responses.
-7. Enable AI into apps to actively engage with customers.
-8. Identify PII and GDPR-related compliance issues for audit reports and take steps to fix these issues.
-
-Objections:
-
-1. How do we centrally manage and monitor the cluster once deployed?
-2. Do our workloads require us to use a data warehouse, or will a data mart suffice?
-3. Will moving to container-based SQL clusters be complex and too high of a operational and management cost for our IT team?
-
 ### Hands-on lab _(this will go in the readme and in the HOL document)_
 
 In this hands-on lab, you will implement a proof-of-concept (PoC) for using advanced features of the managed PostgreSQL PaaS service on Azure. These features help make your database more scalable and able to handle the rapid ingest of streaming data while simultaneously generating and serving pre-aggregated data for reports. You will create a resilient stream processing pipeline to ingest, process, and save real-time data to Postgres. Next, you will implement a solution for exploring and gaining insights from flat files at scale, perform aggregates, and saving the valuable information to your database. Finally, you will create complex reports containing advanced visualizations, using a drag-and-drop interface, and use them to build a customizable dashboard that gets updated in real-time.
