@@ -1,0 +1,188 @@
+![](https://github.com/Microsoft/MCW-Template-Cloud-Workshop/raw/master/Media/ms-cloud-workshop.png 'Microsoft Cloud Workshops')
+
+<div class="MCWHeader1">
+Managed open source databases on Azure
+</div>
+
+<div class="MCWHeader2">
+Before the hands-on lab setup guide
+</div>
+
+<div class="MCWHeader3">
+June 2019
+</div>
+
+Information in this document, including URL and other Internet Web site references, is subject to change without notice. Unless otherwise noted, the example companies, organizations, products, domain names, e-mail addresses, logos, people, places, and events depicted herein are fictitious, and no association with any real company, organization, product, domain name, e-mail address, logo, person, place or event is intended or should be inferred. Complying with all applicable copyright laws is the responsibility of the user. Without limiting the rights under copyright, no part of this document may be reproduced, stored in or introduced into a retrieval system, or transmitted in any form or by any means (electronic, mechanical, photocopying, recording, or otherwise), or for any purpose, without the express written permission of Microsoft Corporation.
+
+Microsoft may have patents, patent applications, trademarks, copyrights, or other intellectual property rights covering subject matter in this document. Except as expressly provided in any written license agreement from Microsoft, the furnishing of this document does not give you any license to these patents, trademarks, copyrights, or other intellectual property.
+
+The names of manufacturers, products, or URLs are provided for informational purposes only and Microsoft makes no representations and warranties, either expressed, implied, or statutory, regarding these manufacturers or the use of the products with any Microsoft technologies. The inclusion of a manufacturer or product does not imply endorsement of Microsoft of the manufacturer or product. Links may be provided to third party sites. Such sites are not under the control of Microsoft and Microsoft is not responsible for the contents of any linked site or any link contained in a linked site, or any changes or updates to such sites. Microsoft is not responsible for webcasting or any other form of transmission received from any linked site. Microsoft is providing these links to you only as a convenience, and the inclusion of any link does not imply endorsement of Microsoft of the site or the products contained therein.
+
+© 2019 Microsoft Corporation. All rights reserved.
+
+Microsoft and the trademarks listed at <https://www.microsoft.com/en-us/legal/intellectualproperty/Trademarks/Usage/General.aspx> are trademarks of the Microsoft group of companies. All other trademarks are property of their respective owners.
+
+**Contents**
+
+<!-- TOC -->
+
+- [Managed open source databases on Azure before the hands-on lab setup guide](#managed-open-source-databases-on-azure-before-the-hands-on-lab-setup-guide)
+  - [Requirements](#requirements)
+  - [Before the hands-on lab](#before-the-hands-on-lab)
+    - [Task 1: Create an Azure resource group using Azure Cloud Shell](#task-1-create-an-azure-resource-group-using-azure-cloud-shell)
+    - [Task 2: Create an event hub with Kafka enabled](#task-2-create-an-event-hub-with-kafka-enabled)
+    - [Task 3: Create Azure Databricks workspace](#task-3-create-azure-databricks-workspace)
+    - [Task 3: Deploy Azure Database for PostgreSQL](#task-3-deploy-azure-database-for-postgresql)
+
+<!-- /TOC -->
+
+# Managed open source databases on Azure before the hands-on lab setup guide
+
+## Requirements
+
+1. Microsoft Azure subscription must be pay-as-you-go or MSDN.
+   - Trial subscriptions will not work.
+
+## Before the hands-on lab
+
+Duration: 30 minutes
+
+In this exercise, you will set up your environment for use in the rest of the hands-on lab. You should follow all steps provided before attending the Hands-on lab.
+
+> **IMPORTANT**: Many Azure resources require unique names. Throughout these steps you will see the word "SUFFIX" as part of resource names. You should replace this with your Microsoft alias, initials, or another value to ensure resources are uniquely named.
+
+### Task 1: Create an Azure resource group using Azure Cloud Shell
+
+In this task, you will use the Azure Cloud shell to create a new Azure Resource Group for this lab.
+
+1. In the [Azure portal](https://portal.azure.com), select the Azure Cloud Shell icon from the top menu.
+
+   ![The Azure Cloud Shell icon is highlighted in the Azure portal's top menu.](media/cloud-shell-icon.png 'Azure Cloud Shell')
+
+2. In the Cloud Shell window that opens at the bottom of your browser window, select **Bash**.
+
+   ![In the Welcome to Azure Cloud Shell window, Bash is highlighted.](media/cloud-shell-select-bash.png 'Azure Cloud Shell')
+
+3. If prompted that you have no storage mounted, select the subscription you are using for this hands-on lab and select **Create storage**.
+
+   ![In the You have no storage mounted dialog, a subscription has been selected, and the Create Storage button is highlighted.](media/cloud-shell-create-storage.png 'Azure Cloud Shell')
+
+   > **NOTE**: If creation fails, you may need to select **Advanced settings** and specify the subscription, region and resource group for the new storage account.
+
+4. After a moment, you will receive a message that you have successfully requested a Cloud Shell, and be presented with bash Azure prompt.
+
+   ![The Azure Cloud Shell is displayed with its default prompt.](media/cloud-shell-prompt.png 'Azure Cloud Shell')
+
+5. If you have multiple subscriptions, choose the appropriate subscription in which the resource should be billed. List all your subscriptions by entering the following into the shell:
+
+   ```bash
+   az account list
+   ```
+
+6. Select the specific subscription ID under your account using `az account set` command. Copy the `id` value from the output of the previous command for the subscription you wish to use into the `subscription id` placeholder:
+
+   ```bash
+   az account set --subscription <subscription id>
+   ```
+
+7. Create a variable to hold your resource group name. This will be used when creating other resources. Replace SUFFIX with your Microsoft alias, initials, or another value to ensure uniqueness.
+
+   ```bash
+   resourcegroup=hands-on-lab-SUFFIX
+   ```
+
+8. Create a variable to hold your resource group location name. Replace the `westus` location with a location closest to you. This same location will be used when provisioning other Azure resources.
+
+   ```bash
+   location=westus
+   ```
+
+   > For a list of valid location names, execute: `az account list-locations -o table`
+
+9. Enter the following command to create a subscription group.
+
+   ```bash
+   az group create --name $resourcegroup --location $location
+   ```
+
+### Task 2: Create an event hub with Kafka enabled
+
+In this task, you will first create an Event Hubs namespace with Kafka enabled. An Event Hubs namespace provides a unique scoping container, referenced by its fully qualified domain name, in which you create one or more event hubs.
+
+1. Create a variable to hold your Event Hubs namespace value. This will be used as a reference when creating your event hub. Be sure to replace SUFFIX with your unique value.
+
+   ```bash
+   namespace=wwi-namespace-SUFFIX
+   ```
+
+2. Enter the following to create your Kafka-enabled Event Hubs namespace:
+
+   ```bash
+   az eventhubs namespace create --name $namespace --resource-group $resourcegroup --enable-kafka true -l $location
+   ```
+
+3. Enter the following to add an event hub named "clickstream" to your namespace:
+
+   ```bash
+   az eventhubs eventhub create --name clickstream --resource-group $resourcegroup --namespace-name $namespace
+   ```
+
+### Task 3: Create Azure Databricks workspace
+
+In this task, you will use the Azure Cloud Shell to create a new Azure Databricks workspace with an Azure Resource Management (ARM) template. During the lab, you will create a Spark cluster within your Azure Databricks workspace to perform real-time stream processing against website clickstream data that is sent through Event Hubs using the Kafka protocol.
+
+1. Create a variable to hold your Azure Databricks workspace name. Be sure to replace SUFFIX with your unique value.
+
+   ```bash
+   workspace=wwi-databricks-SUFFIX
+   ```
+
+2. Execute the following command to create your Azure Databricks workspace with an ARM template:
+
+   ```bash
+   az group deployment create \
+     --name DatabricksWorkspaceDeployment \
+     --resource-group $resourcegroup \
+     --template-uri "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/101-databricks-workspace/azuredeploy.json" \
+     --parameters workspaceName=$workspace pricingTier=premium location=$location
+   ```
+
+### Task 3: Deploy Azure Database for PostgreSQL
+
+In this task, you will deploy a new Azure Database for PostgreSQL, selecting the Hyperscale (Citus) option.
+
+1. In the [Azure portal](https://portal.azure.com), select **+ Create a resource** and search for "azure database for postgresql". Select **Azure Database for PostgreSQL** from the search results. Select **Create** on the Azure Database for PostgreSQL overview blade.
+
+   ![Create a resource is highlighted as well as the search term and result.](media/search-azure-db-for-postgresql.png 'Create a resource')
+
+2. Fill out the new server details form with the following information:
+
+   - Resource group: select the resource group you created earlier.
+   - Server group name: enter a unique name for the new server group, such as **wwi-postgres-SUFFIX**, which will also be used for a server subdomain.
+   - Admin username: currently required to be the value **citus**, and can't be changed.
+   - Password: enter `Abc!1234567890`.
+   - Location: use the location you provided when creating the resource group, or the closest available.
+
+   > The server admin password that you specify here is required to log in to the server and its databases. Remember or record this information for later use.
+
+3. Select **Configure server group**. Leave the settings in that section unchanged and select **Save**.
+
+   ![The form fields are filled out using the previously defined values.](media/create-hyperscale-server-group.png 'Hyperscale server group')
+
+4. Select **Review + create** and then **Create** to provision the server. Provisioning takes **up to 10** minutes.
+
+5. The page will redirect to monitor deployment. When the live status changes from **Your deployment is underway** to **Your deployment is complete**, select the **Outputs** menu item on the left of the page. The outputs page will contain a coordinator hostname with a button next to it to copy the value to the clipboard. Record this information for later use.
+
+   ![The deployment output shows the Coordinator Hostname value after deployment is complete.](media/postgres-coordinator-hostname.png 'Outputs')
+
+6. Select **Overview** to view the deployment details, then select **Go to resource**.
+
+   ![The Overview menu item and Go to resource button are both highlighted.](media/postgres-deployment-overview.png 'Deployment overview')
+
+7. Select **Firewall** in the left-hand menu underneath Security. In the Firewall rules blade, select **+ Add firewall rule for current client IP address (xxx.xxx.xxx.xxx)** to add your IP to the server group's firewall.
+
+   ![The Firewall rules blade is displayed.](media/postgres-firewall.png 'Firewall rules')
+
+8. Select **Save** to apply the new firewall rule.
+
+You should follow all steps provided _before_ performing the Hands-on lab.
