@@ -224,7 +224,9 @@ Their current challenges with ReMarketable are:
 
 2. We are worried about the re-engineering effort involved in sharding our database, from modifying the schema to updating our applications to account for the changes.
 
-3. Is there a way to migration to PostgreSQL on Azure with minimal downtime?
+3. Is there a way to migrate to PostgreSQL on Azure with minimal downtime?
+
+4. We've looked at several PostgreSQL-based data platforms for adding enhancements like distributed data and scalability, but we are concerned about our existing applications being compatible and having access to the latest versions of PostgreSQL.
 
 ### Infographic for common scenarios
 

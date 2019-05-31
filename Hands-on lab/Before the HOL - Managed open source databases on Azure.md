@@ -30,9 +30,12 @@ Microsoft and the trademarks listed at <https://www.microsoft.com/en-us/legal/in
   - [Requirements](#requirements)
   - [Before the hands-on lab](#before-the-hands-on-lab)
     - [Task 1: Create an Azure resource group using Azure Cloud Shell](#task-1-create-an-azure-resource-group-using-azure-cloud-shell)
-    - [Task 2: Create an event hub with Kafka enabled](#task-2-create-an-event-hub-with-kafka-enabled)
-    - [Task 3: Create Azure Databricks workspace](#task-3-create-azure-databricks-workspace)
-    - [Task 3: Deploy Azure Database for PostgreSQL](#task-3-deploy-azure-database-for-postgresql)
+    - [Task 2: Create Cloud Shell variables](#task-2-create-cloud-shell-variables)
+    - [Task 3: Create an Azure Key Vault](#task-3-create-an-azure-key-vault)
+    - [Task 3: Create an event hub with Kafka enabled](#task-3-create-an-event-hub-with-kafka-enabled)
+    - [Task 4: Create an Azure Data Lake Storage Gen2 account](#task-4-create-an-azure-data-lake-storage-gen2-account)
+    - [Task 5: Create Azure Databricks workspace](#task-5-create-azure-databricks-workspace)
+    - [Task 6: Deploy Azure Database for PostgreSQL](#task-6-deploy-azure-database-for-postgresql)
 
 <!-- /TOC -->
 
@@ -42,6 +45,7 @@ Microsoft and the trademarks listed at <https://www.microsoft.com/en-us/legal/in
 
 1. Microsoft Azure subscription must be pay-as-you-go or MSDN.
    - Trial subscriptions will not work.
+2. Install [pgAdmin](https://www.pgadmin.org/download/) 4 or greater
 
 ## Before the hands-on lab
 
@@ -105,9 +109,9 @@ In this task, you will use the Azure Cloud shell to create a new Azure Resource 
    az group create --name $resourcegroup --location $location
    ```
 
-### Task 2: Create an event hub with Kafka enabled
+### Task 2: Create Cloud Shell variables
 
-In this task, you will first create an Event Hubs namespace with Kafka enabled. An Event Hubs namespace provides a unique scoping container, referenced by its fully qualified domain name, in which you create one or more event hubs.
+Azure Cloud Shell allows you to create variables to store values that can be referenced when executing scripts. In this task, you will create variables in addition to the two you have already created. These variables will be used in the tasks that follow.
 
 1. Create a variable to hold your Event Hubs namespace value. This will be used as a reference when creating your event hub. Be sure to replace SUFFIX with your unique value.
 
@@ -115,27 +119,68 @@ In this task, you will first create an Event Hubs namespace with Kafka enabled. 
    namespace=wwi-namespace-SUFFIX
    ```
 
-2. Enter the following to create your Kafka-enabled Event Hubs namespace:
+2. Create a variable to hold your storage account name. Be sure to replace SUFFIX with your unique value.
+
+   ```bash
+   storagename=wwiadlsSUFFIX
+   ```
+
+3. Create a variable to hold your Azure Databricks workspace name. Be sure to replace SUFFIX with your unique value.
+
+   ```bash
+   workspace=wwi-databricks-SUFFIX
+   ```
+
+4. Create a variable to hold your Azure Key Vault name. Be sure to replace SUFFIX with your unique value.
+
+   ```bash
+   keyvault=wwi-keyvault-SUFFIX
+   ```
+
+### Task 3: Create an Azure Key Vault
+
+Azure Key Vault is a cloud service that works as a secure secrets store. You can securely store keys, passwords, certificates, and other secrets. In this task, you will create an Azure Key Vault that will be used to securely store secrets, such as your PostgreSQL database and Azure Data Lake Storage Gen2 credentials. These secrets will be accessed by Azure Databricks.
+
+1. Enter the following to create a Key Vault:
+
+   ```bash
+   az keyvault create --name $keyvault --resource-group $resourcegroup --location $location
+   ```
+
+### Task 3: Create an event hub with Kafka enabled
+
+In this task, you will first create an Event Hubs namespace with Kafka enabled. An Event Hubs namespace provides a unique scoping container, referenced by its fully qualified domain name, in which you create one or more event hubs.
+
+1. Enter the following to create your Kafka-enabled Event Hubs namespace:
 
    ```bash
    az eventhubs namespace create --name $namespace --resource-group $resourcegroup --enable-kafka true -l $location
    ```
 
-3. Enter the following to add an event hub named "clickstream" to your namespace:
+2. Enter the following to add an event hub named "clickstream" to your namespace:
 
    ```bash
    az eventhubs eventhub create --name clickstream --resource-group $resourcegroup --namespace-name $namespace
    ```
 
-### Task 3: Create Azure Databricks workspace
+### Task 4: Create an Azure Data Lake Storage Gen2 account
 
-In this task, you will use the Azure Cloud Shell to create a new Azure Databricks workspace with an Azure Resource Management (ARM) template. During the lab, you will create a Spark cluster within your Azure Databricks workspace to perform real-time stream processing against website clickstream data that is sent through Event Hubs using the Kafka protocol.
+Azure Data Lake Storage Gen2 provides a very fast native directory-based file system optimized for streaming workloads and tailored to work with the Hadoop Distributed File System (HDFS). You will access ADLS Gen2 data from Azure Databricks, using the [ABFS driver](https://docs.microsoft.com/en-us/azure/storage/blobs/data-lake-storage-abfs-driver).
 
-1. Create a variable to hold your Azure Databricks workspace name. Be sure to replace SUFFIX with your unique value.
+2. Enter the following to create a general-purpose v2 storage account with locally-redundant storage:
 
    ```bash
-   workspace=wwi-databricks-SUFFIX
+   az storage account create \
+    --name $storagename \
+    --resource-group $resourcegroup \
+    --location $location \
+    --sku Standard_LRS \
+    --kind StorageV2
    ```
+
+### Task 5: Create Azure Databricks workspace
+
+In this task, you will use the Azure Cloud Shell to create a new Azure Databricks workspace with an Azure Resource Management (ARM) template. During the lab, you will create a Spark cluster within your Azure Databricks workspace to perform real-time stream processing against website clickstream data that is sent through Event Hubs using the Kafka protocol.
 
 2. Execute the following command to create your Azure Databricks workspace with an ARM template:
 
@@ -147,7 +192,7 @@ In this task, you will use the Azure Cloud Shell to create a new Azure Databrick
      --parameters workspaceName=$workspace pricingTier=premium location=$location
    ```
 
-### Task 3: Deploy Azure Database for PostgreSQL
+### Task 6: Deploy Azure Database for PostgreSQL
 
 In this task, you will deploy a new Azure Database for PostgreSQL, selecting the Hyperscale (Citus) option.
 
