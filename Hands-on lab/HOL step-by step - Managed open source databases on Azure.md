@@ -753,29 +753,35 @@ You will then execute queries against the rollup tables that can be used for WWI
    SELECT hourly_aggregation();
    ```
 
-5. Clear the query window and paste the following to retrieve the total number of events and count of distinct devices in the last 5 minutes:
+5. Clear the query window and paste the following to retrieve the total number of events and count of distinct devices in the last 15 minutes:
 
    ```sql
    SELECT sum(event_count) num_events, hll_cardinality(hll_union_agg(device_distinct_count)) distinct_devices
-   FROM rollup_events_5min where minute >=now()-interval '5 minutes' AND minute <=now() AND customer_id=1;
+   FROM rollup_events_5min where minute >=now()-interval '15 minutes' AND minute <=now();
    ```
 
-   > **Note:** If you do not see any values in the result, try adjusting the `5 minutes` interval value to a higher value. If more than five minutes have passed since copying the data, you will not see results until you increase this value.
+   > **Note:** If you do not see any values in the result, try adjusting the `15 minutes` interval value to a higher value. If more than fifteen minutes have passed since ingesting the data, you will not see results until you increase this value.
 
    ![The results output of the first dashboard query is displayed.](media/dashboard-query1.png 'Dashboard query 1')
 
-6. Clear the query window and paste the following to return the count of distinct sessions over the past week:
+6. Clear the query window and paste the following to retrieve the total number of events and count of distinct devices in the last 15 minutes by `customer_id`. Remember, the data is sharded by tenant (Customer ID):
+
+   ```sql
+   SELECT sum(event_count) num_events, hll_cardinality(hll_union_agg(device_distinct_count)) distinct_devices
+   FROM rollup_events_5min where minute >=now()-interval '15 minutes' AND minute <=now() AND customer_id=1;
+   ```
+
+7. Clear the query window and paste the following to return the count of distinct sessions over the past week:
 
    ```sql
    SELECT sum(event_count) num_events,
          hll_cardinality(hll_union_agg(device_distinct_count)) distinct_devices
    FROM rollup_events_1hr
    WHERE hour >=date_trunc('day',now())-interval '7 days'
-     AND hour <=now()
-     AND customer_id=1;
+     AND hour <=now();
    ```
 
-7. Clear the query window and paste the following to return the trend of app usage in the past 2 days, broken down by hour:
+8. Clear the query window and paste the following to return the trend of app usage in the past 2 days, broken down by hour:
 
    ```sql
    SELECT hour,
@@ -785,11 +791,10 @@ You will then execute queries against the rollup tables that can be used for WWI
    FROM rollup_events_1hr
    WHERE hour >=date_trunc('day',now())-interval '2 days'
      AND hour <=now()
-     AND customer_id=1
    GROUP BY hour;
    ```
 
-8. Clear the query window and paste the following to return the top devices in the past 30 minutes:
+9. Clear the query window and paste the following to return the top devices in the past 30 minutes for customer 2:
 
    ```sql
    SELECT (topn(topn_union_agg(top_devices_1000), 10)).item device_id
