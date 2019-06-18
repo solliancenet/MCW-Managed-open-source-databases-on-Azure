@@ -224,7 +224,11 @@ In this task, you will deploy a new Azure Database for PostgreSQL, selecting the
 
    ![The Overview menu item and Go to resource button are both highlighted.](media/postgres-deployment-overview.png 'Deployment overview')
 
-7. Select **Firewall** in the left-hand menu underneath Security. In the Firewall rules blade, select **+ Add firewall rule for current client IP address (xxx.xxx.xxx.xxx)** to add your IP to the server group's firewall.
+7. Select **Firewall** in the left-hand menu underneath Security. In the Firewall rules blade, enter the following to create a new firewall rule to allow all connections (from your machine and Azure services):
+
+   - **Firewall rule name**: ALL
+   - **Start IP**: 0.0.0.0
+   - **End IP**: 255.255.255.255
 
    ![The Firewall rules blade is displayed.](media/postgres-firewall.png 'Firewall rules')
 
