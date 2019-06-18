@@ -44,6 +44,9 @@ Microsoft and the trademarks listed at <https://www.microsoft.com/en-us/legal/in
     - [Task 5: Create an Azure Databricks cluster](#Task-5-Create-an-Azure-Databricks-cluster)
     - [Task 6: Load lab notebooks into Azure Databricks](#Task-6-Load-lab-notebooks-into-Azure-Databricks)
     - [Task 7: Configure Azure Databricks Key Vault-backed secrets](#Task-7-Configure-Azure-Databricks-Key-Vault-backed-secrets)
+  - [Exercise 3: Send clickstream data to Kafka and process it in real time](#Exercise-3-Send-clickstream-data-to-Kafka-and-process-it-in-real-time)
+    - [Task 1: Configure the KafkaProducer application](#Task-1-Configure-the-KafkaProducer-application)
+    - [Task 2: Open notebook and process the streaming data](#Task-2-Open-notebook-and-process-the-streaming-data)
   - [After the hands-on lab](#After-the-hands-on-lab)
     - [Task 1: Task name](#Task-1-Task-name)
     - [Task 2: Task name](#Task-2-Task-name)
@@ -506,13 +509,47 @@ After a moment, you will see a dialog verifying that the secret scope has been c
 
 ## Exercise 3: Send clickstream data to Kafka and process it in real time
 
-Duration: 30 minutes
+Duration: 20 minutes
 
 In this exercise, you will configure and run the `KafkaProducer` application to send clickstream data to your Kafka endpoint provided by your event hub. Then, you will run a notebook with your new Azure Databricks cluster to process the streaming data in real time and write it to your PostgreSQL `events` table.
 
 ### Task 1: Configure the KafkaProducer application
 
-1. Navigate to your
+1. Navigate to your lab files you extracted for this lab. They should be located in a folder named `MCW-Managed-open-source-databases-on-Azure-master` at the root directory of your hard drive (e.g. `C:\MCW-Managed-open-source-databases-on-Azure-master`).
+
+2. Navigate to the following folder within: `\Hands-on lab\Resources\Apps`.
+
+3. Open either the `Windows` folder, or the `Linux` folder, depending on your operating system.
+
+   ![The lab files path is highlighted.](media/lab-files.png 'Lab files')
+
+4. Within the folder, open the `appconfig.json` file in a text editor, such as Notepad.
+
+   ![The appsettings.json file is highlighted.](media/lab-files-windows.png 'appsettings.json')
+
+5. Paste your Event Hubs connection string you copied earlier in between the empty quotation marks next to **EVENTHUB_CONNECTIONSTRING**, then **save** the file.
+
+   ![The appsettings.json file is displayed with the Event Hubs connection string value added.](media/app-settings.png 'Opened appsettings.json file')
+
+### Task 2: Open notebook and process the streaming data
+
+In this task, you will open a Databricks notebook and complete the instructions within.
+
+6. Leave the folder open for now and navigate back to your Azure Databricks workspace. You will be instructed to run `KafkaProducer.exe` in this folder after you have completed some steps within the lab notebook.
+
+7. Within your Azure Databricks workspace, select **Workspace** from the left-hand menu, then select **Users** and select your user account (email address). Now select the **OSSDatabases** folder and then select the **1-Consume-Kafka** notebook to open it.
+
+   ![The 1-Consume-Kafka notebook is highlighted in the Databricks workspace.](media/databricks-open-consume-kafka-notebook.png 'Databricks workspace')
+
+8. After opening the notebook, you need to attach your cluster. To do this, select **Detached** in the toolbar, then select your cluster. If your cluster is not running, you will need to start it.
+
+   ![The Detached toolbar item is highlighted, and the lab-cluster is highlighted.](media/databricks-select-cluster.png 'Attach cluster')
+
+9. You can execute each cell by selecting the **play button** on the upper-right portion of the cell, or you can click anywhere in the cell and execute it by entering **Ctrl+Enter** on your keyboard.
+
+   ![The Play button is highlighted in the Databricks cell.](media/databricks-execute-cell.png 'Databricks cell')
+
+10. After you have completed all the steps in the notebook, continue to the next exercise.
 
 ## After the hands-on lab
 
