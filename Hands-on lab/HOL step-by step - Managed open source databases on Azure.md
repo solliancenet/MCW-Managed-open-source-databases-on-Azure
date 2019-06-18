@@ -26,27 +26,27 @@ Microsoft and the trademarks listed at <https://www.microsoft.com/en-us/legal/in
 
 <!-- TOC -->
 
-- [Managed open source databases on Azure hands-on lab step-by-step](#managed-open-source-databases-on-azure-hands-on-lab-step-by-step)
-  - [Abstract and learning objectives](#abstract-and-learning-objectives)
-  - [Overview](#overview)
-  - [Solution architecture](#solution-architecture)
-  - [Requirements](#requirements)
-  - [Before the hands-on lab](#before-the-hands-on-lab)
-  - [Exercise 1: Connect to and set up your database](#exercise-1-connect-to-and-set-up-your-database)
-    - [Task 1: Connect to the PostgreSQL database](#task-1-connect-to-the-postgresql-database)
-    - [Task 2: Create a table to store clickstream data](#task-2-create-a-table-to-store-clickstream-data)
-    - [Task 3: Shard tables across nodes](#task-3-shard-tables-across-nodes)
-  - [Exercise 2: Add secrets to Key Vault and configure Azure Databricks](#exercise-2-add-secrets-to-key-vault-and-configure-azure-databricks)
-    - [Task 1: Obtain and store ADLS Gen2 secrets in Azure Key Vault](#task-1-obtain-and-store-adls-gen2-secrets-in-azure-key-vault)
-    - [Task 2: Obtain and store Event Hubs (Kafka) secrets in Azure Key Vault](#task-2-obtain-and-store-event-hubs-kafka-secrets-in-azure-key-vault)
-    - [Task 2: Create a service principal for OAuth access to the ADLS Gen2 filesystem](#task-2-create-a-service-principal-for-oauth-access-to-the-adls-gen2-filesystem)
-    - [Task 3: Add the service principal credentials and Tenant Id to Azure Key Vault](#task-3-add-the-service-principal-credentials-and-tenant-id-to-azure-key-vault)
-    - [Task 4: Create an Azure Databricks cluster](#task-4-create-an-azure-databricks-cluster)
-    - [Task 5: Load lab notebooks into Azure Databricks](#task-5-load-lab-notebooks-into-azure-databricks)
-    - [Task 6: Configure Azure Databricks Key Vault-backed secrets](#task-6-configure-azure-databricks-key-vault-backed-secrets)
-  - [After the hands-on lab](#after-the-hands-on-lab)
-    - [Task 1: Task name](#task-1-task-name)
-    - [Task 2: Task name](#task-2-task-name)
+- [Managed open source databases on Azure hands-on lab step-by-step](#Managed-open-source-databases-on-Azure-hands-on-lab-step-by-step)
+  - [Abstract and learning objectives](#Abstract-and-learning-objectives)
+  - [Overview](#Overview)
+  - [Solution architecture](#Solution-architecture)
+  - [Requirements](#Requirements)
+  - [Before the hands-on lab](#Before-the-hands-on-lab)
+  - [Exercise 1: Connect to and set up your database](#Exercise-1-Connect-to-and-set-up-your-database)
+    - [Task 1: Connect to the PostgreSQL database](#Task-1-Connect-to-the-PostgreSQL-database)
+    - [Task 2: Create a table to store clickstream data](#Task-2-Create-a-table-to-store-clickstream-data)
+    - [Task 3: Shard tables across nodes](#Task-3-Shard-tables-across-nodes)
+  - [Exercise 2: Add secrets to Key Vault and configure Azure Databricks](#Exercise-2-Add-secrets-to-Key-Vault-and-configure-Azure-Databricks)
+    - [Task 1: Obtain and store ADLS Gen2 secrets in Azure Key Vault](#Task-1-Obtain-and-store-ADLS-Gen2-secrets-in-Azure-Key-Vault)
+    - [Task 2: Obtain and store Event Hubs (Kafka) secrets in Azure Key Vault](#Task-2-Obtain-and-store-Event-Hubs-Kafka-secrets-in-Azure-Key-Vault)
+    - [Task 3: Create a service principal for OAuth access to the ADLS Gen2 filesystem](#Task-3-Create-a-service-principal-for-OAuth-access-to-the-ADLS-Gen2-filesystem)
+    - [Task 4: Add the service principal credentials and Tenant Id to Azure Key Vault](#Task-4-Add-the-service-principal-credentials-and-Tenant-Id-to-Azure-Key-Vault)
+    - [Task 5: Create an Azure Databricks cluster](#Task-5-Create-an-Azure-Databricks-cluster)
+    - [Task 6: Load lab notebooks into Azure Databricks](#Task-6-Load-lab-notebooks-into-Azure-Databricks)
+    - [Task 7: Configure Azure Databricks Key Vault-backed secrets](#Task-7-Configure-Azure-Databricks-Key-Vault-backed-secrets)
+  - [After the hands-on lab](#After-the-hands-on-lab)
+    - [Task 1: Task name](#Task-1-Task-name)
+    - [Task 2: Task name](#Task-2-Task-name)
 
 <!-- /TOC -->
 
@@ -310,7 +310,7 @@ In this task, you will obtain the Event Hubs connection string and store it as a
 
 10. Select **Create**.
 
-### Task 2: Create a service principal for OAuth access to the ADLS Gen2 filesystem
+### Task 3: Create a service principal for OAuth access to the ADLS Gen2 filesystem
 
 As an added layer of security when accessing an ADLS Gen2 filesystem using Databricks you can use OAuth 2.0 for authentication. In this task, you will use the Azure CLI to create an identity in Azure Active Directory (Azure AD) known as a service principal to facilitate the use of OAuth authentication.
 
@@ -374,7 +374,7 @@ As an added layer of security when accessing an ADLS Gen2 filesystem using Datab
 
     ![The Role assignments tab is displayed, with wwi-oss-sp account highlighted under STORAGE BLOB DATA CONTRIBUTOR role in the list.](media/storage-account-role-assignments.png 'Role assignments')
 
-### Task 3: Add the service principal credentials and Tenant Id to Azure Key Vault
+### Task 4: Add the service principal credentials and Tenant Id to Azure Key Vault
 
 1. To provide access your ADLS Gen2 account from Azure Databricks you will use secrets stored in your Azure Key Vault account to provide the credentials of your newly created service principal within Databricks. Navigate to your Azure Key Vault account in the Azure portal, then select **Access Policies** and select the **+ Add new** button.
 
@@ -418,7 +418,7 @@ As an added layer of security when accessing an ADLS Gen2 filesystem using Datab
 
 11. Select **Create**.
 
-### Task 4: Create an Azure Databricks cluster
+### Task 5: Create an Azure Databricks cluster
 
 In this task, you will connect to your Azure Databricks workspace and create a cluster to use for this hands-on lab.
 
@@ -452,7 +452,7 @@ In this task, you will connect to your Azure Databricks workspace and create a c
 
 4. Select **Create Cluster**. It will take 3-5 minutes for the cluster to be created and started.
 
-### Task 5: Load lab notebooks into Azure Databricks
+### Task 6: Load lab notebooks into Azure Databricks
 
 In this task, you will import the notebooks contained in the [Managed open source databases on Azure MCW GitHub repo](https://github.com/Microsoft/MCW-Managed-open-source-databases-on-Azure) into your Azure Databricks workspace.
 
@@ -472,7 +472,7 @@ In this task, you will import the notebooks contained in the [Managed open sourc
 
 5. You should now see a folder named **OSSDatabases** in your user workspace. This folder contains all of the notebooks you will use throughout this hands-on lab.
 
-### Task 6: Configure Azure Databricks Key Vault-backed secrets
+### Task 7: Configure Azure Databricks Key Vault-backed secrets
 
 In this task, you will connect to your Azure Databricks workspace and configure Azure Databricks secrets to use your Azure Key Vault account as a backing store.
 
