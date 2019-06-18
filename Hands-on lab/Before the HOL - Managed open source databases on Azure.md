@@ -26,16 +26,17 @@ Microsoft and the trademarks listed at <https://www.microsoft.com/en-us/legal/in
 
 <!-- TOC -->
 
-- [Managed open source databases on Azure before the hands-on lab setup guide](#managed-open-source-databases-on-azure-before-the-hands-on-lab-setup-guide)
-  - [Requirements](#requirements)
-  - [Before the hands-on lab](#before-the-hands-on-lab)
-    - [Task 1: Create an Azure resource group using Azure Cloud Shell](#task-1-create-an-azure-resource-group-using-azure-cloud-shell)
-    - [Task 2: Create Cloud Shell variables](#task-2-create-cloud-shell-variables)
-    - [Task 3: Create an Azure Key Vault](#task-3-create-an-azure-key-vault)
-    - [Task 3: Create an event hub with Kafka enabled](#task-3-create-an-event-hub-with-kafka-enabled)
-    - [Task 4: Create an Azure Data Lake Storage Gen2 account](#task-4-create-an-azure-data-lake-storage-gen2-account)
-    - [Task 5: Create Azure Databricks workspace](#task-5-create-azure-databricks-workspace)
-    - [Task 6: Deploy Azure Database for PostgreSQL](#task-6-deploy-azure-database-for-postgresql)
+- [Managed open source databases on Azure before the hands-on lab setup guide](#Managed-open-source-databases-on-Azure-before-the-hands-on-lab-setup-guide)
+  - [Requirements](#Requirements)
+  - [Before the hands-on lab](#Before-the-hands-on-lab)
+    - [Task 1: Create an Azure resource group using Azure Cloud Shell](#Task-1-Create-an-Azure-resource-group-using-Azure-Cloud-Shell)
+    - [Task 2: Create Cloud Shell variables](#Task-2-Create-Cloud-Shell-variables)
+    - [Task 3: Create an Azure Key Vault](#Task-3-Create-an-Azure-Key-Vault)
+    - [Task 3: Create an event hub with Kafka enabled](#Task-3-Create-an-event-hub-with-Kafka-enabled)
+    - [Task 4: Create an Azure Data Lake Storage Gen2 account](#Task-4-Create-an-Azure-Data-Lake-Storage-Gen2-account)
+    - [Task 5: Create Azure Databricks workspace](#Task-5-Create-Azure-Databricks-workspace)
+    - [Task 6: Deploy Azure Database for PostgreSQL](#Task-6-Deploy-Azure-Database-for-PostgreSQL)
+    - [Task 7: Download the starter files](#Task-7-Download-the-starter-files)
 
 <!-- /TOC -->
 
@@ -233,5 +234,19 @@ In this task, you will deploy a new Azure Database for PostgreSQL, selecting the
    ![The Firewall rules blade is displayed.](media/postgres-firewall.png 'Firewall rules')
 
 8. Select **Save** to apply the new firewall rule.
+
+### Task 7: Download the starter files
+
+Download a starter project that includes a payment data generator that sends real-time payment data for processing by your lab solution, as well as data files used in the lab.
+
+1. From your LabVM, download the starter files by downloading a .zip copy of the Cosmos DB real-time advanced analytics GitHub repo.
+
+2. In a web browser, navigate to the [Cosmos DB real-time advanced analytics MCW repo](https://github.com/solliancenet/MCW-Managed-open-source-databases-on-Azure). TODO: UPDATE URL
+
+3. On the repo page, select **Clone or download**, then select **Download ZIP**.
+
+   ![Download .zip containing the repository](media/github-download-repo.png 'Download ZIP')
+
+4. Unzip the contents to your root hard drive (i.e. `C:\`). This will create a folder on your root drive named `MCW-Managed-open-source-databases-on-Azure-master`.
 
 You should follow all steps provided _before_ performing the Hands-on lab.

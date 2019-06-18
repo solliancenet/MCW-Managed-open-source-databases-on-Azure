@@ -210,9 +210,9 @@ You will notice in the script below, as well as in the script above, that we are
 
 ## Exercise 2: Add secrets to Key Vault and configure Azure Databricks
 
-Duration: 25 minutes
+Duration: 30 minutes
 
-In this exercise, you will add secrets to Key Vault to securely store secrets, such as your PostgreSQL database, Event Hubs (Kafka), and Azure Data Lake Storage Gen2 credentials. You will then create a new Databricks cluster configure your Azure Databricks workspace to use a Key Vault-backed secret store to access those secrets. Finally, you will install the required libraries for Azure Databricks.
+In this exercise, you will add secrets to Key Vault to securely store secrets, such as your PostgreSQL database, Event Hubs (Kafka), and Azure Data Lake Storage Gen2 credentials. You will then create a new Databricks cluster configure your Azure Databricks workspace to use a Key Vault-backed secret store to access those secrets.
 
 ### Task 1: Obtain and store ADLS Gen2 secrets in Azure Key Vault
 
@@ -503,6 +503,16 @@ In this task, you will connect to your Azure Databricks workspace and configure 
 8. Select **Create**.
 
 After a moment, you will see a dialog verifying that the secret scope has been created.
+
+## Exercise 3: Send clickstream data to Kafka and process it in real time
+
+Duration: 30 minutes
+
+In this exercise, you will configure and run the `KafkaProducer` application to send clickstream data to your Kafka endpoint provided by your event hub. Then, you will run a notebook with your new Azure Databricks cluster to process the streaming data in real time and write it to your PostgreSQL `events` table.
+
+### Task 1: Configure the KafkaProducer application
+
+1. Navigate to your
 
 ## After the hands-on lab
 
