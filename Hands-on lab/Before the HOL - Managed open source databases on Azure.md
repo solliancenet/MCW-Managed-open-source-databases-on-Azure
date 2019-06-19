@@ -36,7 +36,8 @@ Microsoft and the trademarks listed at <https://www.microsoft.com/en-us/legal/in
     - [Task 4: Create an Azure Data Lake Storage Gen2 account](#Task-4-Create-an-Azure-Data-Lake-Storage-Gen2-account)
     - [Task 5: Create Azure Databricks workspace](#Task-5-Create-Azure-Databricks-workspace)
     - [Task 6: Deploy Azure Database for PostgreSQL](#Task-6-Deploy-Azure-Database-for-PostgreSQL)
-    - [Task 7: Download the starter files](#Task-7-Download-the-starter-files)
+    - [Task 7: Install Npgsql](#Task-7-Install-Npgsql)
+    - [Task 8: Download the starter files](#Task-8-Download-the-starter-files)
 
 <!-- /TOC -->
 
@@ -46,7 +47,9 @@ Microsoft and the trademarks listed at <https://www.microsoft.com/en-us/legal/in
 
 1. Microsoft Azure subscription must be pay-as-you-go or MSDN.
    - Trial subscriptions will not work.
+   - **IMPORTANT**: To complete the OAuth 2.0 access components of this hands-on lab you must have permissions within your Azure subscription to create an App Registration and service principal within Azure Active Directory.
 2. Install [pgAdmin](https://www.pgadmin.org/download/) 4 or greater
+3. Install [Power BI Desktop](https://powerbi.microsoft.com/desktop/)
 
 ## Before the hands-on lab
 
@@ -235,7 +238,19 @@ In this task, you will deploy a new Azure Database for PostgreSQL, selecting the
 
 8. Select **Save** to apply the new firewall rule.
 
-### Task 7: Download the starter files
+### Task 7: Install Npgsql
+
+Npgsql is a .NET data provider for PostgreSQL and is required to connect Power BI Desktop to your PostgreSQL database cluster. Make sure you have installed [Power BI Desktop](https://powerbi.microsoft.com/desktop/) before continuing.
+
+1. Navigate to <https://github.com/npgsql/npgsql/releases> and download then run the **.msi** file for the latest version.
+
+   ![The .msi file is highlighted for the latest release.](media/npgsql-latest-release.png 'Npgsql releases')
+
+2. During installation, select **Npgsql GAC Installation** when given the option to select features you want to install. Select the **Entire feature will be installed on local hard drive** option.
+
+   ![The Npgsql GAC Installation feature is selected.](media/npgsql-features.png 'Npgsql Custom Setup')
+
+### Task 8: Download the starter files
 
 Download a starter project that includes a payment data generator that sends real-time payment data for processing by your lab solution, as well as data files used in the lab.
 

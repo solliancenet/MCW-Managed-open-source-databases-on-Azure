@@ -578,7 +578,7 @@ One way to keep track of which events have already been aggregated is to mark th
 
 Advanced aggregation is accomplished by using HyperLogLog (HLL) and `TopN`, as discussed earlier. For this topic, reference the `five_minutely_aggregation` and `hourly_aggregation` functions below. Also, please note that where you see the special `excluded` table in the query, it is used to reference values originally proposed for insertion. We are using `hll_has_bigint` to hash the HLL columns `device_id` and `session_id`. This hash function produces a uniformly distributed bit string. HLL does this by dividing values into streams and averaging the results. The `hll_add_agg` and `hll_union` are used to do incremental rollups. `TopN` keeps track of a set of counters in JSONB with the explicit goal of determining the top N (like top 10) items (or our "heavy hitters"). In our case, we're using it to return the top 1000 devices by `device_id`. Similar to HLL, we are using `topn_add_agg` and `topn_union` to do incremental rollups. The `topn_union` function merges `TopN` objects over time periods and dimensions.
 
-## Task 1: Create functions to rollup data
+### Task 1: Create functions to rollup data
 
 1. Open **pgAdmin** once more. If you no longer have the Query Editor open, expand the **Lab** server under the Servers tree in pgAdmin, expand Databases then select **citus**. When the citus database is highlighted, select the **Query Tool** button above.
 
@@ -726,7 +726,7 @@ Advanced aggregation is accomplished by using HyperLogLog (HLL) and `TopN`, as d
    $function$;
    ```
 
-## Task 2: Schedule periodic aggregation and execute dashboard queries
+### Task 2: Schedule periodic aggregation and execute dashboard queries
 
 In this task, you will use [pg_cron](https://github.com/citusdata/pg_cron) to run the aggregation functions on a periodic basis.
 
@@ -803,6 +803,20 @@ You will then execute queries against the rollup tables that can be used for WWI
      AND minute <=now()
      AND customer_id=2;
    ```
+
+## Exercise 5: Create advanced visualizations in Power BI
+
+In this exercise, you will connect to your PostgreSQL database cluster in [Power BI Desktop](https://powerbi.microsoft.com/desktop/) and create advanced visualizations. Then you will export the report to Power BI online so it can be accessed by others and embedded in external websites.
+
+### Task 1: Connect to your Postgres data from Power BI
+
+1. Open Power BI Desktop, then select **Get data**.
+
+    ![Get data is highlighted.](media/pbi-get-data.png "Power BI Desktop")
+
+2. In the Get Data dialog, search for `postgres` then select the **PostgreSQL database** option.
+
+    ![The PostgreSQL database data source is selected.](media/pbi-postgres-data-source-search.png "Get Data")
 
 ## After the hands-on lab
 
