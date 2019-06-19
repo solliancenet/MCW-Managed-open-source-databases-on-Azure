@@ -53,7 +53,7 @@ Microsoft and the trademarks listed at <https://www.microsoft.com/en-us/legal/in
   - [Exercise 5: Create advanced visualizations in Power BI](#Exercise-5-Create-advanced-visualizations-in-Power-BI)
     - [Task 1: Connect to your Postgres data from Power BI](#Task-1-Connect-to-your-Postgres-data-from-Power-BI)
     - [Task 2: Create report](#Task-2-Create-report)
-  - [Task 3: Save and publish report](#Task-3-Save-and-publish-report)
+    - [Task 3: Save and publish report](#Task-3-Save-and-publish-report)
   - [After the hands-on lab](#After-the-hands-on-lab)
     - [Task 1: Delete the resource group](#Task-1-Delete-the-resource-group)
 
@@ -900,7 +900,7 @@ In this exercise, you will connect to your PostgreSQL database cluster in [Power
 
     ![A filtered view of the finished report is displayed.](media/pbi-filtered-report.png 'Power BI filtered report')
 
-## Task 3: Save and publish report
+### Task 3: Save and publish report
 
 To share your report with others or to enable embedding the report within websites or mobile devices, you can publish it to the online Power BI service.
 
