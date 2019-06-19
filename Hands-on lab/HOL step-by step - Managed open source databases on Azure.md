@@ -48,11 +48,14 @@ Microsoft and the trademarks listed at <https://www.microsoft.com/en-us/legal/in
     - [Task 1: Configure the KafkaProducer application](#Task-1-Configure-the-KafkaProducer-application)
     - [Task 2: Open notebook and process the streaming data](#Task-2-Open-notebook-and-process-the-streaming-data)
   - [Exercise 4: Rollup real-time data in PostgreSQL](#Exercise-4-Rollup-real-time-data-in-PostgreSQL)
-  - [Task 1: Create functions to rollup data](#Task-1-Create-functions-to-rollup-data)
-  - [Task 2: Schedule periodic aggregation and execute dashboard queries](#Task-2-Schedule-periodic-aggregation-and-execute-dashboard-queries)
+    - [Task 1: Create functions to rollup data](#Task-1-Create-functions-to-rollup-data)
+    - [Task 2: Schedule periodic aggregation and execute dashboard queries](#Task-2-Schedule-periodic-aggregation-and-execute-dashboard-queries)
+  - [Exercise 5: Create advanced visualizations in Power BI](#Exercise-5-Create-advanced-visualizations-in-Power-BI)
+    - [Task 1: Connect to your Postgres data from Power BI](#Task-1-Connect-to-your-Postgres-data-from-Power-BI)
+    - [Task 2: Create report](#Task-2-Create-report)
+  - [Task 3: Save and publish report](#Task-3-Save-and-publish-report)
   - [After the hands-on lab](#After-the-hands-on-lab)
-    - [Task 1: Task name](#Task-1-Task-name)
-    - [Task 2: Task name](#Task-2-Task-name)
+    - [Task 1: Delete the resource group](#Task-1-Delete-the-resource-group)
 
 <!-- /TOC -->
 
@@ -812,32 +815,131 @@ In this exercise, you will connect to your PostgreSQL database cluster in [Power
 
 1. Open Power BI Desktop, then select **Get data**.
 
-    ![Get data is highlighted.](media/pbi-get-data.png "Power BI Desktop")
+   ![Get data is highlighted.](media/pbi-get-data.png 'Power BI Desktop')
 
-2. In the Get Data dialog, search for `postgres` then select the **PostgreSQL database** option.
+2. In the Get Data dialog, search for `postgres` then select the **PostgreSQL database** option. Click **Connect**.
 
-    ![The PostgreSQL database data source is selected.](media/pbi-postgres-data-source-search.png "Get Data")
+   ![The PostgreSQL database data source is selected.](media/pbi-postgres-data-source-search.png 'Get Data')
+
+3. If you see the following error after clicking **Connect**, you need to [install Npgsql](./Before%20the%20HOL%20-%20Managed%20open%20source%20databases%20on%20Azure.md#Task-7-Install-Npgsql) on your machine, or reboot if you have already completed the installation.
+
+   ![Dialog says this connector requires one or more additional components to be installed before it can be used.](media/pbi-postgresql-error.png 'PostgreSQL database error')
+
+4. In the PostgreSQL database dialog, enter the following into the displayed fields, then click **OK**:
+
+   - **Server**: paste the host value from the connection string you copied earlier (the string of text between `jdbc:postgresql://` and `/citus?`. For example: `<your-server-name>.postgres.database.azure.com:5432`), be sure to include the port at the end (`:5432`).
+   - **Database**: enter **citus**.
+
+   ![The Server and Database fields are displayed.](media/pbi-postgresql-server.png 'PostgreSQL database')
+
+5. Enter the following in the form that follows, then click **Connect**:
+
+   - **User name**: enter **citus**.
+   - **Password**: enter your database password.
+   - **Select which level to apply these settings to**: leave at default value.
+
+   ![The credentials form is displayed.](media/pbi-postgresql-server-creds.png 'PostgreSQL database')
+
+6. In the next screen, a list of tables will appear. Check the box next to **public.events**, then click **Load**.
+
+   ![The public.events table is selected.](media/pbi-navigator.png 'Navigator')
+
+   > Notice that there are several tables whose name starts with `public.events`. This is because of the automatic sharding of the table. The Hyperscale cluster takes care of selecting data from the appropriate shard when you select from the `public.events` table, and handles writing to a shard as well.
+
+### Task 2: Create report
+
+1. In a few moments, you will see a blank report canvas. Select the **Map** visualization from the Visualizations toolbox on the right-hand side.
+
+   ![The Map visualization is highlighted.](media/pbi-map-icon.png 'Visualizations')
+
+2. Drag the **country** field from the `events` table to **Location**, and **event_type** to **Size** within the Map visualization settings.
+
+   ![The fields are shown in their respective locations in the Map settings.](media/pbi-map-settings.png 'Map settings')
+
+3. Your Map visualization should look similar to the following:
+
+   ![The Map visualization is displayed.](media/pbi-map.png 'Map')
+
+4. Click anywhere on the blank canvas to deselect the Map. Select the **Treemap** visualization.
+
+   ![The Treemap visualization is highlighted.](media/pbi-treemap-icon.png 'Visualizations')
+
+5. Drag the **event_id** field from the `events` table to **Values**, and **event_type** to **Group** within the Treemap visualization settings.
+
+   ![The fields are showin in their respective locations in the Treemap settings.](media/pbi-treemap-settings.png 'Treemap settings')
+
+6. Your Treemap visualization should look similar to the following:
+
+   ![The Treemap visualization is displayed.](media/pbi-treemap.png 'Treemap')
+
+7. Click anywhere on the blank canvas to deselect the Map. Select the **Line and clustered column chart** visualization.
+
+   ![The Line and clustered column chart visualization is highlighted.](media/pbi-line-icon.png 'Visualizations')
+
+8. Drag the **country** field from the `events` table to **Column series**, **event_type** to **Shared axis**, and **session_id** to **Column values** within the Line and clustered column chart visualization settings.
+
+   ![The fields are showin in their respective locations in the Line and clustered column chart settings.](media/pbi-line-settings.png 'Visualization settings')
+
+9. Your visualization should look similar to the following:
+
+   ![The visualization is displayed.](media/pbi-line.png 'Line and clustered column chart')
+
+10. Click anywhere on the blank canvas to deselect the Map. Select the **Ribbon chart** visualization.
+
+    ![The Ribbon chart visualization is highlighted.](media/pbi-ribbon-chart.png 'Visualizations')
+
+11. Drag the **browser** field from the `events` table to **Legend**, **country** to **Axis**, and **event_id** to **Value** within the Ribbon chart visualization settings.
+
+    ![The fields are showin in their respective locations in the Ribbon chart settings.](media/pbi-ribbon-settings.png 'Visualization settings')
+
+12. Your Ribbon chart visualization should look similar to the following:
+
+    ![The visualization is displayed.](media/pbi-ribbon.png 'Ribbon chart')
+
+13. When you are done, the report should look like the following. You can click on any item to filter all visualizations. For instance, we selected **download** on the **Treemap** visualization to apply the filter to display only download activities on each chart.
+
+    ![A filtered view of the finished report is displayed.](media/pbi-filtered-report.png 'Power BI filtered report')
+
+## Task 3: Save and publish report
+
+To share your report with others or to enable embedding the report within websites or mobile devices, you can publish it to the online Power BI service.
+
+1. Click the **Publish** button in the ribbon bar above.
+
+   ![The Publish button is highlighted in the ribbon bar.](media/pbi-publish-button.png 'Publish')
+
+2. When prompted to save your changes, click **Save** to save your report to your machine.
+
+   ![A dialog asking whether to save changes is displayed.](media/pbi-save.png 'Save changes')
+
+3. In the Publish dialog, select the **My workspace** destination, then click **Select**.
+
+   ![The My Workspace destination is selected.](media/pbi-publish-destination.png 'Publish to Power BI')
+
+4. In a few moments, you will receive a confirmation that your report was successfully published. Select the link to open your report in Power BI.
+
+   ![The Open in Power BI link is highlighted.](media/pbi-publish-success.png 'Publishing to Power BI')
+
+5. A new browser tab will open, taking you to your published report on the [Power BI website](https://app.powerbi.com). Create a new dashboard by selecting **Pin Live Page** in the toolbar above the report.
+
+   ![The Pin Live Page option is highlighted.](media/pbi-website-report.png 'Power BI website')
+
+6. In the Pin to dashboard dialog, select **New dashboard** and enter a **Dashboard name**, then select **Pin live**.
+
+   ![The pin to dashboard dialog is displayed.](media/pbi-website-pin-live.png 'Pin to dashboard')
+
+You now have the ability to share your report with others, view a mobile version, and edit the published version of your report.
 
 ## After the hands-on lab
 
-Duration: X minutes
+Duration: 10 mins
 
-\[insert your custom Hands-on lab content here . . .\]
+In this exercise, you will delete any Azure resources that were created in support of the lab. You should follow all steps provided after attending the Hands-on lab to ensure your account does not continue to be charged for lab resources.
 
-### Task 1: Task name
+### Task 1: Delete the resource group
 
-1.  Number and insert your custom workshop content here . . .
+1. Using the [Azure portal](https://portal.azure.com), navigate to the Resource group you used throughout this hands-on lab by selecting Resource groups in the left menu.
+2. Search for the name of your resource group, and select it from the list.
+3. Select Delete in the command bar, and confirm the deletion by re-typing the Resource group name, and selecting Delete.
 
-    a. Insert content here
-
-        i.
-
-### Task 2: Task name
-
-1.  Number and insert your custom workshop content here . . .
-
-        a.  Insert content here
-
-            i.
-
-    You should follow all steps provided _after_ attending the Hands-on lab.
+You should follow all steps provided _after_ attending the Hands-on lab.
