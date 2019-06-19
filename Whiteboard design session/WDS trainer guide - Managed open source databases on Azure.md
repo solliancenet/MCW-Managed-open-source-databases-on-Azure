@@ -350,6 +350,7 @@ Directions: Tables reconvene with the larger group to hear the facilitator/SME s
 | Event Hubs for Apache Kafka                             |    <https://docs.microsoft.com/en-us/azure/event-hubs/event-hubs-for-kafka-ecosystem-overview>     |
 | Power BI documentation                                  |                            <https://docs.microsoft.com/en-us/power-bi/>                            |
 | High availability clusters for On-premises data gateway |       <https://docs.microsoft.com/en-us/power-bi/service-gateway-high-availability-clusters>       |
+| Azure Database Migration Service                        |                                      <https://aka.ms/get-dms>                                      |
 
 # Managed open source databases on Azure whiteboard design session trainer guide
 
@@ -656,11 +657,19 @@ _Advanced dashboards_
 
 1. Does Azure offer a managed PostgreSQL database that can handle our scale requirements?
 
+   Yes! The new Azure Database for PostgreSQL Hyperscale (Citus) option allows you to configure scaling up and scaling out the coordinator and worker nodes of your database cluster. It is ideal for applications that require greater scale and performance than the single server option, and generally for workloads that are at or beyond 100 GB of data.
+
 2. We are worried about the re-engineering effort involved in sharding our database, from modifying the schema to updating our applications to account for the changes.
+
+   The sharding logic is automatically handled for you by the Hyperscale server group. WWI wants to use sharding because it allows them to horizontally scale their database across multiple managed Postgres servers. Another reason they want to use sharding is for multi-tenancy. They should configure the distribution column to be the Tenant ID. When this same ID is used in the events table as well as rollup tables, the data stored in both types of table are automatically co-located by Citus. Hyperscale clusters will allow them to parallelize their aggregations across shards, then perform a SELECT on a rollup for a particular tenant from the dashboard, and have it automatically routed to the appropriate shard. All of this can be done with minimal schema changes, and potentially no code changes.
 
 3. Is there a way to migrate to PostgreSQL on Azure with minimal downtime?
 
+   Yes. This can be accomplished by using Azure Data Migration Service (DMS) with the continuous sync capability. The basic steps are that DMS performs an initial load of your source data to your Azure Database for PostgreSQL database. From there any new transactions are continuously synchronized to Azure while the application remains running. After the data catches up, briefly stop the application, wait for the last batch of data to catch up to the target, then change your application's connection string to point to the new database on Azure.
+
 4. We've looked at several PostgreSQL-based data platforms for adding enhancements like distributed data and scalability, but we are concerned about our existing applications being compatible and having access to the latest versions of PostgreSQL.
+
+   The Hyperscale option uses Citus to provide the distributed data storage capabilities like sharding and various partitioning plans. However, it was built to be an extension of PostgreSQL, not a forked version with that has to be modified every time there's a new version of PostgreSQL. Because of this, WWI can continue using the latest versions of PostgreSQL and maintain full compatibility with the single server option and standard connection libraries.
 
 ## Customer quote (to be read back to the attendees at the end)
 

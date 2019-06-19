@@ -224,3 +224,4 @@ Directions: Tables reconvene with the larger group to hear the facilitator/SME s
 | Event Hubs for Apache Kafka                             |    <https://docs.microsoft.com/en-us/azure/event-hubs/event-hubs-for-kafka-ecosystem-overview>     |
 | Power BI documentation                                  |                            <https://docs.microsoft.com/en-us/power-bi/>                            |
 | High availability clusters for On-premises data gateway |       <https://docs.microsoft.com/en-us/power-bi/service-gateway-high-availability-clusters>       |
+| Azure Database Migration Service                        |                                      <https://aka.ms/get-dms>                                      |
