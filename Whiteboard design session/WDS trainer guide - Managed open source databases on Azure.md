@@ -396,7 +396,9 @@ Directions: Tables reconvene with the larger group to hear the facilitator/SME s
 
 ## Preferred target audience
 
-\[insert your custom workshop content here . . . \]
+Charlene Mathis, Chief Information Officer (CIO), Wide World Importers
+
+The primary audience is the business decision makers and technology decision makers. From the case study scenario, this includes Charlene Mathis, CIO for Wide World Importers. Usually, we talk to the database administrators and infrastructure managers who report to the chief information officers (CIOs). We also speak with application sponsors (like a vice president [VP] line of business [LOB], or chief marketing officer [CMO]), or to those who represent the business unit IT or developers that report to application sponsors.
 
 ## Preferred solution
 
