@@ -622,19 +622,45 @@ _Resilient stream processing_
 
 1. WWI is currently using a Kafka cluster to ingest a high volume of streaming data from various clickstream sources across their tenants. Is there a managed option in Azure that supports Kafka?
 
+   Azure Event Hubs is a Big Data streaming platform that is capable of ingesting millions of events per second. It is fully managed and contains controls you can use to either scale it on demand or have it automatically scale to pre-defined thresholds. It provides an Apache Kafka endpoint you can enable, expanding its protocol options to HTTPS, AMQP, and Apache Kafka 1.0 and above. The Kafka endpoint would allow WWI to use their existing applications to write to the Event Hubs-backed Kafka service.
+
 2. WWI sometimes encounters errors while stream processing, and has a difficult time recovering and continuing where they left off if the stream has to stop for any reason. What would you recommend for a resilient stream processing solution to reduce errors and prevent lost data?
 
+   Apache Spark is the de facto standard in Big Data processing that is built to conduct batch, interactive, and real-time processing using the same core engine. This gives you the benefit of having a unified framework for processing these varying latencies (speeds) of Big Data, as well as being able to conduct machine learning, deep learning, graph processing, and advanced analytics in one place. Spark has become a leader in the data engineering and data science industry due to its ease of use, large ecosystem of tools and libraries, and for the fact that it runs batch and streaming workloads 100x faster than Hadoop on average. Azure Databricks provides one of the best options for running Spark on managed clusters in Azure.
+
+   WWI can connect to the Kafka endpoint provided by Event Hubs, directly from a Databricks notebook, and use Spark Structured Streaming to process the data in real-time. Azure Key Vault can be used to secure secrets, such as the Kafka and PostgreSQL connection strings and be used as a backing store for a Databricks secret store. This will prevent any accidental leakage of these secrets.
+
+   In Structured Streaming, if you enable checkpointing for a streaming query, then you can restart the query after a failure and the restarted query will continue where the failed one left off, while ensuring fault tolerance and data consistency guarantees. If you do not have a checkpoint directory, when the streaming job stops, you lose all state around your streaming job and upon restart, you start from scratch.
+
+   The Databricks clusters can be configured to mount an Azure Data Lake Storage Gen2 account for fast-distributed storage of the streaming checkpoints, as well as any long-term storage needs when using Azure Databricks for Big Data analytics.
+
 3. Could your chosen stream processing solution also provide the ability to conduct batch processing against large amounts of data while sharing much of the data processing and cleansing code, as well as code to write data to PostgreSQL?
+
+   As stated in the previous answer, Apache Spark offers a unified platform for performing batch, interactive query, and real-time stream processing. Clusters are defined by selecting VM sizes and capabilities (compute or memory-optimized, GPU, etc.), as well as the number of worker nodes for scaling out Spark processing to handle demanding workloads. You can use Python, Scala, SQL, and R, along with a broad ecosystem of libraries you can use for data manipulation and advanced analytics.
+
+   To connect to PostgreSQL from Azure Databricks, you can use the included `org.postgresql.Driver` driver and connect to it with a simple JDBC connection string that can be securely stored in Azure Key Vault and access from within a notebook or library.
 
 _Advanced dashboards_
 
 1. What would you recommend Wide World Importers use to create reports and dashboards with advanced visualizations, that can be created with an intuitive visual interface, easily shared with others, embedded in external websites or mobile devices?
 
+   Power BI could be used to create reports and static or real-time dashboards from multiple on-premises and cloud-based services, such as Azure Database for PostgreSQL. WWI can use it to create advanced visualizations through a drag-and-drop interface with several out-of-the-box components, like maps, multiple charts, slicers, custom R and Python components, etc. They would start out by creating the report using Power BI Desktop to connect to the PostgreSQL database cluster, then optionally publish the report to the Power BI online service. From there, they can invite collaborators to modify the report, create a dashboard, modify for mobile form factors, and embed the report within external websites and mobile devices.
+
 2. How can WWI refresh the report's data on a regular basis and provide redundancy in their synchronization process? Does this synchronization process require any inbound ports to be opened up on the computer or servers on which it runs?
+
+   At this time, PostgreSQL data sources do not support DirectQuery or live updates in Power BI. However, the data source can be refreshed either manually or at regular intervals with an on-premises data gateway. The gateway can be installed on individual computers, but WWI would want to install them on servers or hosted VMs. When you add additional gateways, they act together as a highly available cluster. Behind the scenes, the gateway cloud service securely encrypts stores the data source credentials, and manages an Azure Service Bus instance to securely and resiliently secure data transfers between the cloud and gateways. This communication flows one way from the source gateways to the cloud. This way, it is not required to open any inbound traffic on the VMs or on-premises firewalls.
+
+   WWI can perform multiple dataset refreshes daily to their PostgreSQL database cluster. Power BI limits datasets on shared capacity to eight daily refreshes. If the dataset resides on a Premium capacity, they can perform up to 48 refreshes per day.
 
 ## Checklist of preferred objection handling
 
-\[insert your custom workshop content here . . . \]
+1. Does Azure offer a managed PostgreSQL database that can handle our scale requirements?
+
+2. We are worried about the re-engineering effort involved in sharding our database, from modifying the schema to updating our applications to account for the changes.
+
+3. Is there a way to migrate to PostgreSQL on Azure with minimal downtime?
+
+4. We've looked at several PostgreSQL-based data platforms for adding enhancements like distributed data and scalability, but we are concerned about our existing applications being compatible and having access to the latest versions of PostgreSQL.
 
 ## Customer quote (to be read back to the attendees at the end)
 

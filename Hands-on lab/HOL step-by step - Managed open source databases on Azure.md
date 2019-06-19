@@ -481,7 +481,7 @@ In this task, you will import the notebooks contained in the [Managed open sourc
 
    ![The Workspace menu is highlighted in the Azure Databricks workspace, and Users is selected with the current user's account selected and highlighted. Import is selected in the user's context menu.](media/databricks-workspace-import.png 'Import files into user workspace')
 
-3. Within the Import Notebooks dialog, select **URL** for Import from, and then paste the following into the box: `https://github.com/solliancenet/MCW-Managed-open-source-databases-on-Azure/blob/master/Hands-on%20lab/lab-files/OSSDatabases.dbc`
+3. Within the Import Notebooks dialog, select **URL** for Import from, and then paste the following into the box: `https://github.com/solliancenet/MCW-Managed-open-source-databases-on-Azure/blob/master/Hands-on%20lab/Resources/OSSDatabases.dbc`
 
    ![The Import Notebooks dialog is displayed](media/databricks-import-notebooks.png 'Import Notebooks dialog')
 
