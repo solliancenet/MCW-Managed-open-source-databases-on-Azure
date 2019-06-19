@@ -26,31 +26,31 @@ Microsoft and the trademarks listed at <https://www.microsoft.com/en-us/legal/in
 
 <!-- TOC -->
 
-- [Trainer information](#trainer-information)
-  - [Role of the trainer](#role-of-the-trainer)
-  - [Whiteboard design session flow](#whiteboard-design-session-flow)
-  - [Before the whiteboard design session: How to prepare](#before-the-whiteboard-design-session-how-to-prepare)
-  - [During the whiteboard design session: Tips for an effective whiteboard design session](#during-the-whiteboard-design-session-tips-for-an-effective-whiteboard-design-session)
-- [Managed open source databases on Azure whiteboard design session student guide](#managed-open-source-databases-on-azure-whiteboard-design-session-student-guide)
-  - [Abstract and learning objectives](#abstract-and-learning-objectives)
-  - [Step 1: Review the customer case study](#step-1-review-the-customer-case-study)
-    - [Customer situation](#customer-situation)
-    - [Customer needs](#customer-needs)
-    - [Customer objections](#customer-objections)
-    - [Infographic for common scenarios](#infographic-for-common-scenarios)
-  - [Step 2: Design a proof of concept solution](#step-2-design-a-proof-of-concept-solution)
-  - [Step 3: Present the solution](#step-3-present-the-solution)
-  - [Wrap-up](#wrap-up)
-  - [Additional references](#additional-references)
-- [Managed open source databases on Azure whiteboard design session trainer guide](#managed-open-source-databases-on-azure-whiteboard-design-session-trainer-guide)
-  - [Step 1: Review the customer case study](#step-1-review-the-customer-case-study-1)
-  - [Step 2: Design a proof of concept solution](#step-2-design-a-proof-of-concept-solution-1)
-  - [Step 3: Present the solution](#step-3-present-the-solution-1)
-  - [Wrap-up](#wrap-up-1)
-  - [Preferred target audience](#preferred-target-audience)
-  - [Preferred solution](#preferred-solution)
-  - [Checklist of preferred objection handling](#checklist-of-preferred-objection-handling)
-  - [Customer quote (to be read back to the attendees at the end)](#customer-quote-to-be-read-back-to-the-attendees-at-the-end)
+- [Trainer information](#Trainer-information)
+  - [Role of the trainer](#Role-of-the-trainer)
+  - [Whiteboard design session flow](#Whiteboard-design-session-flow)
+  - [Before the whiteboard design session: How to prepare](#Before-the-whiteboard-design-session-How-to-prepare)
+  - [During the whiteboard design session: Tips for an effective whiteboard design session](#During-the-whiteboard-design-session-Tips-for-an-effective-whiteboard-design-session)
+- [Managed open source databases on Azure whiteboard design session student guide](#Managed-open-source-databases-on-Azure-whiteboard-design-session-student-guide)
+  - [Abstract and learning objectives](#Abstract-and-learning-objectives)
+  - [Step 1: Review the customer case study](#Step-1-Review-the-customer-case-study)
+    - [Customer situation](#Customer-situation)
+    - [Customer needs](#Customer-needs)
+    - [Customer objections](#Customer-objections)
+    - [Infographic for common scenarios](#Infographic-for-common-scenarios)
+  - [Step 2: Design a proof of concept solution](#Step-2-Design-a-proof-of-concept-solution)
+  - [Step 3: Present the solution](#Step-3-Present-the-solution)
+  - [Wrap-up](#Wrap-up)
+  - [Additional references](#Additional-references)
+- [Managed open source databases on Azure whiteboard design session trainer guide](#Managed-open-source-databases-on-Azure-whiteboard-design-session-trainer-guide)
+  - [Step 1: Review the customer case study](#Step-1-Review-the-customer-case-study-1)
+  - [Step 2: Design a proof of concept solution](#Step-2-Design-a-proof-of-concept-solution-1)
+  - [Step 3: Present the solution](#Step-3-Present-the-solution-1)
+  - [Wrap-up](#Wrap-up-1)
+  - [Preferred target audience](#Preferred-target-audience)
+  - [Preferred solution](#Preferred-solution)
+  - [Checklist of preferred objection handling](#Checklist-of-preferred-objection-handling)
+  - [Customer quote (to be read back to the attendees at the end)](#Customer-quote-to-be-read-back-to-the-attendees-at-the-end)
 
 <!-- /TOC -->
 
@@ -214,7 +214,7 @@ Their current challenges with ReMarketable are:
 
 3. Need a way to efficiently ingest and process streaming data, while at the same time generating pre-aggregated data for our dashboards.
 
-4. During our stream processing, we sometimes encounter errors and have a difficult time recovering and continuing where we left off. We need a more resilient stream processing solution to reduce errors and prevent lost or duplicate data.
+4. During our stream processing, we sometimes encounter errors and have a difficult time recovering and continuing where we left off. We need a more resilient stream processing solution to reduce errors and prevent lost data.
 
 5. Would like a simple way to create powerful reports with a variety of visualizations. Ideally, this is something our analysts should be able to do against our live data sets.
 
@@ -230,7 +230,7 @@ Their current challenges with ReMarketable are:
 
 ### Infographic for common scenarios
 
-\[insert your custom workshop content here . . . \]
+![Infographic for common scenarios that you can use for inspiration.](media/common-scenarios.png 'Infographic for common scenarios')
 
 ## Step 2: Design a proof of concept solution
 
@@ -254,27 +254,43 @@ Directions: With all participants at your table, respond to the following questi
 
 _High-level architecture_
 
-1. Without getting into the details (the following sections will address the particular details), diagram your initial vision for handling the top-level requirements for payment fraud detection, including stream capture and processing, long-term storage, model training, global distribution of the model for real-time scoring and of the pre-scored fraud data, and dashboards.
+1. Without getting into the details (the following sections will address the particular details), diagram your initial vision for handling the top-level requirements for creating a real-time data processing pipeline that can ingest, process, and write streaming data to a highly scalable managed PostgreSQL database on Azure. The stream processor needs to be resilient by keeping track of where it left off and prevent lost data. Include a solution for creating advanced visualizations that can be shared or embedded in external websites and mobile devices.
 
 _Scale_
 
-1.  Number and insert questions here
+1. How will you configure the managed PostgreSQL database so it can be scaled to meet demand. Think about options for scaling up and for scaling out.
+
+2. WWI wants to be able to scale their database out, but they've already expressed concerns about how sharding tables to accomplish this adds a lot of complexity and maintenance overhead, as well as required code changes. How would you propose they shard tables that need to have data distributed amongst the nodes?
+
+3. How can the clickstream time series event data be partitioned into 5-minute increments to avoid creating large indexes?
 
 _Multi-tenancy_
 
-1.  Number and insert questions here
+1. The clickstream event data is multi-tenant by nature. Each tenant is denoted by a Tenant ID which is related to the source of the clickstream feed. How can WWI shard the raw event table by tenant across multiple nodes in a way that causes little impact to existing applications and maintenance overhead?
+
+2. WWI has expressed a desire to create rollup tables that contain pre-aggregated data for efficient reporting. These rollup tables should also be sharded by Tenant ID. How can WWI shard these tables as well and what data type can be used to rapidly obtain distinct counts within a small margin of error in a highly scalable way across partitions?
 
 _Process data while generating roll-ups_
 
-1.  Number
+1. Rollup tables enable faster queries for reporting and exploration, but oftentimes require compute-heavy work to periodically run in the background to populate these tables. How would you schedule these aggregates to run on a periodic basis?
+
+2. Within your rollup functions that perform the background aggregations, how would you implement incremental aggregations to handle late, incoming, data while keeping track of which time periods have been aggregated already?
+
+3. Incremental aggregations sacrifice the ability to handle all types of aggregates for ease of use when tracking what has already been aggregated when processing late data. What advanced aggregation options can you use to provide highly accurate approximation in this situation?
 
 _Resilient stream processing_
 
-1.  Number
+1. WWI is currently using a Kafka cluster to ingest a high volume of streaming data from various clickstream sources across their tenants. Is there a managed option in Azure that supports Kafka?
+
+2. WWI sometimes encounters errors while stream processing, and has a difficult time recovering and continuing where they left off if the stream has to stop for any reason. What would you recommend for a resilient stream processing solution to reduce errors and prevent lost data?
+
+3. Could your chosen stream processing solution also provide the ability to conduct batch processing against large amounts of data while sharing much of the data processing and cleansing code, as well as code to write data to PostgreSQL?
 
 _Advanced dashboards_
 
-1.  Number
+1. What would you recommend Wide World Importers use to create reports and dashboards with advanced visualizations, that can be created with an intuitive visual interface, easily shared with others, embedded in external websites or mobile devices?
+
+2. How can WWI refresh the report's data on a regular basis and provide redundancy in their synchronization process? Does this synchronization process require any inbound ports to be opened up on the computer or servers on which it runs?
 
 **Prepare**
 
@@ -322,13 +338,18 @@ Directions: Tables reconvene with the larger group to hear the facilitator/SME s
 
 ## Additional references
 
-|                 |           |
-| --------------- | :-------: |
-| **Description** | **Links** |
-|                 |           |
-|                 |           |
-|                 |           |
-|                 |           |
+|                                                         |                                                                                                    |
+| ------------------------------------------------------- | :------------------------------------------------------------------------------------------------: |
+| **Description**                                         |                                             **Links**                                              |
+| Azure PostgreSQL documentation                          |                        <https://docs.microsoft.com/en-us/azure/postgresql/>                        |
+| PostgreSQL time series data processing                  |  <https://docs.microsoft.com/en-us/azure/postgresql/tutorial-design-database-hyperscale-realtime>  |
+| PostgreSQL distribution columns and multi-tenant apps   | <https://docs.microsoft.com/en-us/azure/postgresql/concepts-hyperscale-choose-distribution-column> |
+| PostgreSQL HyperLogLog extension                        |                           <https://github.com/citusdata/postgresql-hll>                            |
+| Azure Databricks documentation                          |         <https://docs.microsoft.com/en-us/azure/azure-databricks/what-is-azure-databricks>         |
+| Azure Databricks Structured Streaming                   |          <https://docs.azuredatabricks.net/spark/latest/structured-streaming/index.html>           |
+| Event Hubs for Apache Kafka                             |    <https://docs.microsoft.com/en-us/azure/event-hubs/event-hubs-for-kafka-ecosystem-overview>     |
+| Power BI documentation                                  |                            <https://docs.microsoft.com/en-us/power-bi/>                            |
+| High availability clusters for On-premises data gateway |       <https://docs.microsoft.com/en-us/power-bi/service-gateway-high-availability-clusters>       |
 
 # Managed open source databases on Azure whiteboard design session trainer guide
 
@@ -378,15 +399,238 @@ Directions: Tables reconvene with the larger group to hear the facilitator/SME s
 
 ## Preferred solution
 
-\[insert your custom workshop content here . . . \]
+_High-level architecture_
 
-_Title_
+1. Without getting into the details (the following sections will address the particular details), diagram your initial vision for handling the top-level requirements for creating a real-time data processing pipeline that can ingest, process, and write streaming data to a highly scalable managed PostgreSQL database on Azure. The stream processor needs to be resilient by keeping track of where it left off and prevent lost data. Include a solution for creating advanced visualizations that can be shared or embedded in external websites and mobile devices.
 
-1.  Number and insert questions and answers here
+![High-level architecture.](../Media/outline-architecture.png 'High-level architecture')
 
-_Title_
+The solution begins with multiple sources of clickstream data, each from a different tenant, flowing in through a Kafka streaming ingest managed service provided by Azure Event Hubs. This allows Wide World Importers to continue using their existing code to produce Kafka events. An Apache Spark cluster running on Azure Databricks processes and transforms the data in real time, using Structured Streaming. Azure Data Lake Storage is used to store the Structured Streaming checkpoint for resiliency to recover from errors and prevent lost data. Azure Key Vault is used to securely store secrets, such as the Event Hubs and PostgreSQL connection strings, and serves as a backing for Azure Databricks secret scopes. All event data is stored written to an Azure Databricks for PostgreSQL managed Hyperscale (Citus) database cluster, offering both scale-up and scale-out capability with features that simplify sharding and partitioning time series and multi-tenant data. Data is periodically written to rollup tables, using a background process that runs on a scheduled basis, to provide extremely fast querying of pre-aggregated data that does not interfere with incoming streams of late-arriving data. Websites and Power BI reports and dashboards use this data to provide rich reports that can be run at scale with minimum processing time. An on-premises data gateway cluster runs on several VMs to update the Power BI dashboards at regular intervals to match the pre-aggregation processes that write to the rollup tables.
 
-1.  Number and insert questions and answers here
+_Scale_
+
+1. How will you configure the managed PostgreSQL database so it can be scaled to meet demand. Think about options for scaling up and for scaling out.
+
+   Azure Database for PostgreSQL is a fully managed service built on the open source PostgreSQL database engine. It provides high availability and performance with monitoring and alerting, enterprise-grade security and compliance, automatic backups, data secured at-rest and in-motion, and full compatibility with PostgreSQL extensions with little to no administration required.
+
+   Hyperscale clusters are enabled by Citus, which is an extension of PostgreSQL that allows you to horizontally scale queries across multiple machines, using sharding and partitioning techniques. Because of this, the query engine parallelizes incoming SQL queries across these servers for faster response times on large datasets. Data sharding is transparently handled for you and allows your existing PostgreSQL applications to take advantage of the benefits distributed data storage and querying provides, with minimal changes. This means that Wide World Importer's multi-tenant, real-time operational analytics requirements will be met with little effort on their part.
+
+   A Hyperscale server group (database cluster) consists of a coordinator node and several worker nodes. To scale up, you define the number of cores and storage you require per coordinator node and worker node. You can select up to 32 vCores with 8 GiB RAM per vCore and up to 2 TiB of storage with up to 3 IOPS / GiB per node. To scale out, you can define the number of worker nodes, between 2 and 20. If you require more than 20 worker nodes, you can submit a support request.
+
+   You can define the compute and storage settings independently for your nodes, giving you flexibility by adding more of one or the other depending on your needs. The storage includes database files, temporary files, transaction logs, and the Postgres server logs. The total amount of storage you provision also defines the I/O capacity available to each worker and coordinator node.
+
+2. WWI wants to be able to scale their database out, but they've already expressed concerns about how sharding tables to accomplish this adds a lot of complexity and maintenance overhead, as well as required code changes. How would you propose they shard tables that need to have data distributed amongst the nodes?
+
+   The sharding logic is handled for you by the Hyperscale server group (enabled by Citus), allowing you to horizontally scale your database across multiple managed Postgres servers. This provides you with multi-tenancy because the data is sharded by the same Tenant ID. Because we are sharding on the same ID for our raw events table and rollup tables, our data stored in both types of table are automatically co-located for us by Citus. Furthermore, this means that aggregations can be performed locally without crossing network boundaries when we insert our events data into the rollup tables. The dashboard queries that execute against the rollup tables are always for a particular tenant. Hyperscale clusters allow us to parallelize our aggregations across shards, then perform a SELECT on a rollup for a particular customer from the dashboard, and have it automatically routed to the appropriate shard.
+
+   Because the sharding is transparently handled for you, WWI will be able to start using this capability with very minor changes to their schema and mostly without impacting their existing applications.
+
+3. How can the clickstream time series event data be partitioned into 5-minute increments to avoid creating large indexes?
+
+   This event data table can be partitioned by a timestamp, such as `event_time`, for the time series data. The sample script below creates a partition every 5 minutes, using [pg_partman](https://www.citusdata.com/blog/2018/01/24/citus-and-pg-partman-creating-a-scalable-time-series-database-on-PostgreSQL/).
+
+   ```sql
+   CREATE TABLE events(
+       event_id serial,
+       event_time timestamptz default now(),
+       tenant_id bigint,
+       event_type text,
+       country text,
+       browser text,
+       device_id bigint,
+       session_id bigint
+   )
+   PARTITION BY RANGE (event_time);
+
+   --Create 5-minutes partitions
+   SELECT partman.create_parent('public.events', 'event_time', 'native', '5 minutes');
+   UPDATE partman.part_config SET infinite_time_partitions = true;
+
+   SELECT create_distributed_table('events','tenant_id');
+   ```
+
+   Partitioning is the key to high performance and being able to scale out across several database nodes. One of the keys to fast data loading is to avoid using large indexes. Traditionally, you would use block-range (BRIN) indexes to speed up range scans over roughly-sorted data. However, when you have unsorted data, BRIN indexes tend to perform poorly. Partitioning helps keep indexes small. It does this by dividing tables into partitions, avoiding fragmentation of data while maintaining smaller indexes.
+
+_Multi-tenancy_
+
+1. The clickstream event data is multi-tenant by nature. Each tenant is denoted by a Tenant ID which is related to the source of the clickstream feed. How can WWI shard the raw event table by tenant across multiple nodes in a way that causes little impact to existing applications and maintenance overhead?
+
+   As mentioned earlier, WWI can shard their data based on Tenant ID. When you use the `create_distributed_table` function, you define the distributed table name (such as `events`) and a distribution column to define which tenant owns which rows (such as `tenant_id`):
+
+   ```sql
+   SELECT create_distributed_table('events','tenant_id');
+   ```
+
+   The hyperscale deployment handles the distribution, or sharding, for you across all of the cluster's nodes. As stated before, you do not need to have knowledge of how the data is distributed when you read from or write to these tables.
+
+2. WWI has expressed a desire to create rollup tables that contain pre-aggregated data for efficient reporting. These rollup tables should also be sharded by Tenant ID. How can WWI shard these tables as well and what data type can be used to rapidly obtain distinct counts within a small margin of error in a highly scalable way across partitions?
+
+   WWI will shard the rollup tables in the same way they shard the events table:
+
+   ```sql
+   SELECT create_distributed_table('rollup_events_5min','tenant_id');
+   ```
+
+   Another important thing to note about the rollup tables is that it is highly recommended to use HyperLogLog (HLL) data types to very rapidly obtain distinct counts for devices and sessions (device_distinct_count and session_distinct_count). HyperLogLog is a fixed-size data structure that is extremely fast at estimating distinct value counts with tunable precision. For example, in 1280 bytes HLL can estimate the count of tens of billions of distinct values with only a few percent error (source).
+
+   You can see the `hll` data type in the schema definition below for a rollup table:
+
+   ```sql
+   CREATE TABLE rollup_events_5min (
+       tenant_id bigint,
+       event_type text,
+       country text,
+       browser text,
+       minute timestamptz,
+       event_count bigint,
+       device_distinct_count hll,
+       session_distinct_count hll,
+       top_devices_1000 jsonb
+   );
+   CREATE UNIQUE INDEX rollup_events_5min_unique_idx ON rollup_events_5min(tenant_id,event_type,country,browser,minute);
+   SELECT create_distributed_table('rollup_events_5min','tenant_id');
+   ```
+
+   It is very common to run SELECT COUNT(DISTINCT) on your database to update a dashboard with the number of unique items such as unique purchases of a particular item, unique users, unique page visits, etc. However, when you are using distributed systems, as Wide World Importers is in this situation, calculating unique counts is a difficult problem to solve. One reason for this is that there can be overlapping records across the workers. You could get around this by pulling all the data into a single machine and perform the count, but this does not scale well. Another option is to perform map/reduce functions, which scales, but are very slow to execute. The better option that provides scalability and speed is to use approximation algorithms to provide distinct count results within mathematically provable error bounds. This is why we are using HyperLogLog.
+
+   If we were not using HLL, we would be limited to creating a large number of rollup tables. You would need rollup tables for various time periods, and rollup tables to calculate the distinct counts constrained by combinations of columns. For example, if you pre-aggregate over minutes, then you cannot answer queries asking for distinct counts over an hour. If you try and each minute's result to find hourly visits to a specific page, for example, the result will be unreliable because you are likely to have overlapping records within those different minutes. This problem is further complicated when you want to return a count of page visits filtered by time and unique page visit counts by user or a combination of the two. HLL allows us to use one or two rollup tables to answer all of these queries and more. This is because HLL overcomes the overlapping records problem by encoding the data in a way that allows summing up individual unique counts without re-counting overlapping records. When we write data to the HLL columns, we also hash it to ensure uniform distribution.
+
+_Process data while generating roll-ups_
+
+1. Rollup tables enable faster queries for reporting and exploration, but oftentimes require compute-heavy work to periodically run in the background to populate these tables. How would you schedule these aggregates to run on a periodic basis?
+
+   WWI will create rollup aggregation functions that can be scheduled to run on a periodic basis using [pg_cron](https://github.com/citusdata/pg_cron).
+
+   ```sql
+   SELECT cron.schedule('*/5 * * * *', 'SELECT five_minutely_aggregation();');
+   ```
+
+   The cron notation makes it simple to schedule execution in a number of ways, such as minutely, hourly, daily, weekly, monthly, day of week, etc.
+
+2. Within your rollup functions that perform the background aggregations, how would you implement incremental aggregations to handle late, incoming, data while keeping track of which time periods have been aggregated already?
+
+   Rollups are an integral piece of this solution because they provide fast, indexed lookups of aggregates where compute-heavy work is performed periodically in the background. Because these rollups are compact, they can easily be consumed by various clients and kept over longer periods of time.
+
+   When you look at the SQL scripts for the `five_minutely_aggregation` function below, you will notice that we are using incremental aggregation to support late, or incoming, data. This is accomplished by using `ON CONFLICT ... DO UPDATE` in the `INSERT` statement.
+
+   ```sql
+   CREATE OR REPLACE FUNCTION five_minutely_aggregation(OUT start_id bigint, OUT end_id bigint)
+   RETURNS record
+   LANGUAGE plpgsql
+   AS $function$
+   BEGIN
+       /* determine which page views we can safely aggregate */
+       SELECT window_start, window_end INTO start_id, end_id
+       FROM incremental_rollup_window('rollup_events_5min');
+
+       /* exit early if there are no new page views to aggregate */
+       IF start_id > end_id THEN RETURN; END IF;
+
+       /* aggregate the page views, merge results if the entry already exists */
+       INSERT INTO rollup_events_5min
+           SELECT customer_id,
+                   event_type,
+                   country,
+                   browser,
+                   date_trunc('seconds', (event_time - TIMESTAMP 'epoch') / 300) * 300 + TIMESTAMP 'epoch' AS minute,
+                   count(*) as event_count,
+                   hll_add_agg(hll_hash_bigint(device_id)) as device_distinct_count,
+                   hll_add_agg(hll_hash_bigint(session_id)) as session_distinct_count,
+                   topn_add_agg(device_id::text) top_devices_1000
+           FROM events WHERE event_id BETWEEN start_id AND end_id
+           GROUP BY customer_id,event_type,country,browser,minute
+           ON CONFLICT (customer_id,event_type,country,browser,minute)
+           DO UPDATE
+           SET event_count=rollup_events_5min.event_count+excluded.event_count,
+               device_distinct_count = hll_union(rollup_events_5min.device_distinct_count, excluded.device_distinct_count),
+               session_distinct_count= hll_union(rollup_events_5min.session_distinct_count, excluded.session_distinct_count),
+               top_devices_1000 = topn_union(rollup_events_5min.top_devices_1000, excluded.top_devices_1000);
+
+   END;
+   $function$;
+   ```
+
+   When executing aggregations, you have the choice between append-only or incremental aggregation. Append-only aggregation (insert) supports all aggregates, including exact distinct and percentiles, but are more difficult to use when handling late data. This is because you have to keep track of which time periods have been aggregated already, since you aggregate events for a particular time period and append them to the rollup table once all the data for that period are available. Incremental aggregation (upsert), on the other hand, easily supports processing late data. The side effect is that it cannot handle all aggregates. We work around this limitation by using highly accurate approximation through HyperLogLog (HLL) and `TopN`. As stated previously, WWI will be aggregating new events and upserting them to the rollup tables. They still need to be able to keep track of which events have already been aggregated.
+
+   One way to keep track of which events have already been aggregated is to mark them as aggregated (`SET aggregated = true`). The problem with this approach is that it causes bloat and fragmentation. Another way would be to use a staging table to temporarily store events. This can cause catalog bloat and high overhead per batch, depending on how often your aggregation is run. The recommended approach is to [track the sequence number](https://www.citusdata.com/blog/2018/06/14/scalable-incremental-data-aggregation/). This means that each event has a monotonically increasing sequence number (`i`). We store sequence number `S` up to the point in which all events were aggregated. To aggregate, we pull a number from the sequence (`E`), briefly block writes to ensure there are no more in-flight transactions using sequence numbers <= `E` (`EXECUTE format('LOCK %s IN EXCLUSIVE MODE', table_to_lock)`), then incrementally aggregate all events with sequence numbers `S` < `i` <= `E`. Finally, we set `S` = `E` and repeat this process on each upsert. You can see exactly how we're doing this in the `incremental_rollup_window` function below. The `rollups` table keeps track of the sequence for us. The `five_minutely_aggregation` and `hourly_aggregation` functions call `incremental_rollup_window` to retrieve the range of page views that can be safely aggregated, using the start and end `event_id` values (`start_id` and `end_id`).
+
+   ```sql
+   CREATE TABLE rollups (
+      name text primary key,
+      event_table_name text not null,
+      event_id_sequence_name text not null,
+      last_aggregated_id bigint default 0
+   );
+
+   CREATE OR REPLACE FUNCTION incremental_rollup_window(rollup_name text, OUT window_start bigint, OUT window_end bigint)
+   RETURNS record
+   LANGUAGE plpgsql
+   AS $function$
+   DECLARE
+      table_to_lock regclass;
+   BEGIN
+      /*
+      * Perform aggregation from the last aggregated ID + 1 up to the last committed ID.
+      * We do a SELECT .. FOR UPDATE on the row in the rollup table to prevent
+      * aggregations from running concurrently.
+      */
+      SELECT event_table_name, last_aggregated_id+1, pg_sequence_last_value(event_id_sequence_name)
+      INTO table_to_lock, window_start, window_end
+      FROM rollups
+      WHERE name = rollup_name FOR UPDATE;
+
+      IF NOT FOUND THEN
+          RAISE 'rollup ''%'' is not in the rollups table', rollup_name;
+      END IF;
+
+      IF window_end IS NULL THEN
+          /* sequence was never used */
+          window_end := 0;
+          RETURN;
+      END IF;
+
+      /*
+      * Play a little trick: We very briefly lock the table for writes in order to
+      * wait for all pending writes to finish. That way, we are sure that there are
+      * no more uncommitted writes with a identifier lower or equal to window_end.
+      * By throwing an exception, we release the lock immediately after obtaining it
+      * such that writes can resume.
+      */
+      BEGIN
+          EXECUTE format('LOCK %s IN EXCLUSIVE MODE', table_to_lock);
+          RAISE 'release table lock';
+      EXCEPTION WHEN OTHERS THEN
+      END;
+
+      /*
+      * Remember the end of the window to continue from there next time.
+      */
+      UPDATE rollups SET last_aggregated_id = window_end WHERE name = rollup_name;
+   END;
+   $function$;
+
+   -- Entries for the rollup tables so that they are getting tracked in incremental rollup process.
+   INSERT INTO rollups (name, event_table_name, event_id_sequence_name)
+   VALUES ('rollup_events_5min', 'events','events_event_id_seq');
+   ```
+
+3. Incremental aggregations sacrifice the ability to handle all types of aggregates for ease of use when tracking what has already been aggregated when processing late data. What advanced aggregation options can you use to provide highly accurate approximation in this situation?
+
+   Advanced aggregation is accomplished by using HyperLogLog (HLL) and `TopN`, as discussed earlier. For this topic, reference the `five_minutely_aggregation` function above. Also, please note that where you see the special `excluded` table in the query, it is used to reference values originally proposed for insertion. We are using `hll_has_bigint` to hash the HLL columns `device_id` and `session_id`. This hash function produces a uniformly distributed bit string. HLL does this by dividing values into streams and averaging the results. The `hll_add_agg` and `hll_union` are used to do incremental rollups. `TopN` keeps track of a set of counters in JSONB with the explicit goal of determining the top N (like top 10) items (or our "heavy hitters"). In our case, we're using it to return the top 1000 devices by `device_id`. Similar to HLL, we are using `topn_add_agg` and `topn_union` to do incremental rollups. The `topn_union` function merges `TopN` objects over time periods and dimensions.
+
+_Resilient stream processing_
+
+1. WWI is currently using a Kafka cluster to ingest a high volume of streaming data from various clickstream sources across their tenants. Is there a managed option in Azure that supports Kafka?
+
+2. WWI sometimes encounters errors while stream processing, and has a difficult time recovering and continuing where they left off if the stream has to stop for any reason. What would you recommend for a resilient stream processing solution to reduce errors and prevent lost data?
+
+3. Could your chosen stream processing solution also provide the ability to conduct batch processing against large amounts of data while sharing much of the data processing and cleansing code, as well as code to write data to PostgreSQL?
+
+_Advanced dashboards_
+
+1. What would you recommend Wide World Importers use to create reports and dashboards with advanced visualizations, that can be created with an intuitive visual interface, easily shared with others, embedded in external websites or mobile devices?
+
+2. How can WWI refresh the report's data on a regular basis and provide redundancy in their synchronization process? Does this synchronization process require any inbound ports to be opened up on the computer or servers on which it runs?
 
 ## Checklist of preferred objection handling
 
