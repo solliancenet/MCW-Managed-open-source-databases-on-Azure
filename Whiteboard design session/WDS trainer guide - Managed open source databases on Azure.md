@@ -675,4 +675,6 @@ _Advanced dashboards_
 
 ## Customer quote (to be read back to the attendees at the end)
 
-\[insert your custom workshop content here . . . \]
+"Migrating our PostgreSQL databases to Azure with the Hyperscale server group option has both simplified our initial plans of manually sharding our databases and handling multitenancy, while greatly increasing the performance of our most complex queries. The combination of services Microsoft has helped us use to build a resilient and scalable real-time data processing pipeline enabled us to put in place a future-proof design under budget and in record time."
+
+Charlene Mathis, CIO, Wide World Importers
