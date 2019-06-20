@@ -462,8 +462,11 @@ In this task, you will connect to your Azure Databricks workspace and create a c
    - Expand Advanced Options and enter the following into the Spark Config box:
 
      ```bash
-     spark.databricks.delta.preview.enabled true
+     spark.driver.extraJavaOptions -Djava.security.properties=
+     spark.executor.extraJavaOptions -Djava.security.properties=
      ```
+
+     > The two values in the advanced options fixes an issue caused by GCM ciphers being disabled in Databricks version 5.1 and greater. Without these settings, you will receive the following error when attempting to connect to the PostgreSQL Hyperscale cluster: `SSL error: Received fatal alert: handshake_failure`.
 
    ![The Create Cluster screen is displayed, with the values specified above entered into the appropriate fields.](media/databricks-create-new-cluster.png 'Create a new Databricks cluster')
 
