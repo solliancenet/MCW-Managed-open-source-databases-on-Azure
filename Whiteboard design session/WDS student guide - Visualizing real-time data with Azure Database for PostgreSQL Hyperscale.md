@@ -26,7 +26,7 @@ Microsoft and the trademarks listed at <https://www.microsoft.com/en-us/legal/in
 
 <!-- TOC -->
 
-- [Visualizing real-time data with Azure Database for PostgreSQL Hyperscale whiteboard design session student guide](#Managed-open-source-databases-on-Azure-whiteboard-design-session-student-guide)
+- [Visualizing real-time data with Azure Database for PostgreSQL Hyperscale whiteboard design session student guide](#Visualizing-real-time-data-with-Azure-Database-for-PostgreSQL-Hyperscale-whiteboard-design-session-student-guide)
   - [Abstract and learning objectives](#Abstract-and-learning-objectives)
   - [Step 1: Review the customer case study](#Step-1-Review-the-customer-case-study)
     - [Customer situation](#Customer-situation)
@@ -44,7 +44,9 @@ Microsoft and the trademarks listed at <https://www.microsoft.com/en-us/legal/in
 
 ## Abstract and learning objectives
 
-\[insert what is trying to be solved for by using this workshop. . . \]
+Wide World Importers has a host of online stores for various product offerings, including traditional product catalogs offered by their physical storefronts, to specialized categories like automotive and consumer technology products. This expansion has made it more challenging to analyze user clickstream data, online ad performance, and other marketing campaigns at scale, and to provide insights to the marketing team in real-time. Today they store and analyze user clickstream data, online ad performance, and other marketing campaigns to evaluate marketing effectiveness and customer reach.
+
+At the end of this whiteboard design session, you will be better able to use advanced features of the managed PostgreSQL PaaS service on Azure to make your database more scalable and able to handle the rapid ingest of streaming data while simultaneously generating and serving pre-aggregated data for reports. You will design a resilient stream processing pipeline to ingest, process, and save real-time data and provide guidance on how to create complex reports containing advanced visualizations and use them to build a customizable dashboard.
 
 ## Step 1: Review the customer case study
 
