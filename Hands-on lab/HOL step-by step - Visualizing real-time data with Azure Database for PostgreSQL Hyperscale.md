@@ -1,7 +1,7 @@
 ![](https://github.com/Microsoft/MCW-Template-Cloud-Workshop/raw/master/Media/ms-cloud-workshop.png 'Microsoft Cloud Workshops')
 
 <div class="MCWHeader1">
-Managed open source databases on Azure
+Visualizing real-time data with Azure Database for PostgreSQL Hyperscale
 </div>
 
 <div class="MCWHeader2">
@@ -26,7 +26,7 @@ Microsoft and the trademarks listed at <https://www.microsoft.com/en-us/legal/in
 
 <!-- TOC -->
 
-- [Managed open source databases on Azure hands-on lab step-by-step](#Managed-open-source-databases-on-Azure-hands-on-lab-step-by-step)
+- [Visualizing real-time data with Azure Database for PostgreSQL Hyperscale hands-on lab step-by-step](#Visualizing-real-time-data-with-Azure-Database-for-PostgreSQL-Hyperscale-hands-on-lab-step-by-step)
   - [Abstract and learning objectives](#Abstract-and-learning-objectives)
   - [Overview](#Overview)
   - [Solution architecture](#Solution-architecture)
@@ -59,7 +59,7 @@ Microsoft and the trademarks listed at <https://www.microsoft.com/en-us/legal/in
 
 <!-- /TOC -->
 
-# Managed open source databases on Azure hands-on lab step-by-step
+# Visualizing real-time data with Azure Database for PostgreSQL Hyperscale hands-on lab step-by-step
 
 ## Abstract and learning objectives
 
@@ -130,7 +130,7 @@ In this exercise, you will obtain your PostgreSQL connection string and use the 
 
 In this task, you will create the `events` raw table to capture every clickstream event. This table is partitioned by `event_time` since we are using it to store time series data. The script you execute to create the schema creates a partition every 5 minutes, using [pg_partman](https://www.citusdata.com/blog/2018/01/24/citus-and-pg-partman-creating-a-scalable-time-series-database-on-PostgreSQL/).
 
-Partitioning is the key to high performance and being able to scale out across several database nodes. One of the keys to fast data loading is to avoid using large indexes. Traditionally, you would use block-range (BRIN) indexes to speed up range scans over roughly-sorted data. However, when you have unsorted data, BRIN indexes tend to perform poorly. Partitioning helps keep indexes small. It does this by dividing tables into partitions, avoiding fragmentation of data while maintaining smaller indexes.
+Partitioning is the key to high performance, as it allows you to break up data into further smaller chunks based on time windows. One of the keys to fast data loading is to avoid using large indexes. Traditionally, you would use block-range (BRIN) indexes to speed up range scans over roughly-sorted data. However, when you have unsorted data, BRIN indexes tend to perform poorly. Partitioning helps keep indexes small. It does this by dividing tables into partitions, avoiding fragmentation of data while maintaining smaller indexes. In addition, it allows you to query only a smaller portion of the data when you run queries for particular time windows, leading to faster SELECT performance.
 
 1. With the **Lab** server expanded under the Servers tree in pgAdmin, expand Databases then select **citus**. When the citus database is highlighted, select the **Query Tool** button above.
 
@@ -154,8 +154,6 @@ Partitioning is the key to high performance and being able to scale out across s
    --Create 5-minutes partitions
    SELECT partman.create_parent('public.events', 'event_time', 'native', '5 minutes');
    UPDATE partman.part_config SET infinite_time_partitions = true;
-
-   SELECT create_distributed_table('events','customer_id');
    ```
 
 3. Press F5 to execute the query, or select the **Execute** button on the toolbar above.
@@ -217,7 +215,12 @@ If we were not using HLL, we would be limited to creating a large number of roll
     );
     CREATE UNIQUE INDEX rollup_events_1hr_unique_idx ON rollup_events_1hr(customer_id,event_type,country,browser,hour);
     SELECT create_distributed_table('rollup_events_1hr','customer_id');
+
+    --shard the events table as well
+    SELECT create_distributed_table('events','customer_id');
    ```
+
+   > Note that we are sharding each of the tables on the `customer_id` column. This is done by calling the `create_distributed_table` function. When you run this function, Citus inserts metadata marking the table as distributed and creates shards on the worker nodes. Then incoming data into these tables is routed to the right node based on customer id. Because we are sharding on the same ID for our raw events table and rollup tables, our data stored in both types of table are automatically co-located for us by Citus.
 
 3. Press F5 to execute the query, or select the **Execute** button on the toolbar above.
 
@@ -451,7 +454,7 @@ In this task, you will connect to your Azure Databricks workspace and create a c
 
    - **Cluster Name**: Enter a name for your cluster, such as lab-cluster.
    - **Cluster Mode**: Select Standard.
-   - **Databricks Runtime Version**: Select Runtime: 5.3 (Scala 2.11, Spark 2.4.0).
+   - **Databricks Runtime Version**: Select Runtime: 5.4 (Scala 2.11, Spark 2.4.3).
    - **Python Version**: Select 3.
    - **Enable autoscaling**: Ensure this is checked.
    - **Terminate after XX minutes of inactivity**: Leave this checked, and the number of minutes set to 120.
@@ -474,7 +477,7 @@ In this task, you will connect to your Azure Databricks workspace and create a c
 
 ### Task 6: Load lab notebooks into Azure Databricks
 
-In this task, you will import the notebooks contained in the [Managed open source databases on Azure MCW GitHub repo](https://github.com/Microsoft/MCW-Managed-open-source-databases-on-Azure) into your Azure Databricks workspace.
+In this task, you will import the notebooks contained in the [Visualizing real-time data with Azure Database for PostgreSQL Hyperscale MCW GitHub repo](https://github.com/Microsoft/MCW-Managed-open-source-databases-on-Azure) into your Azure Databricks workspace.
 
 1. Navigate to your Azure Databricks workspace in the Azure portal, and select **Launch Workspace** from the overview blade, signing into the workspace with your Azure credentials, if required.
 
@@ -532,7 +535,7 @@ In this exercise, you will configure and run the `KafkaProducer` application to 
 
 ### Task 1: Configure the KafkaProducer application
 
-1. Navigate to your lab files you extracted for this lab. They should be located in a folder named `MCW-Managed-open-source-databases-on-Azure-master` at the root directory of your hard drive (e.g. `C:\MCW-Managed-open-source-databases-on-Azure-master`).
+1. Navigate to your lab files you extracted for this lab. They should be located in a folder named `MCW-Real-time-data-with-Azure-Database-for-PostgreSQL-Hyperscale` at the root directory of your hard drive (e.g. `C:\MCW-Real-time-data-with-Azure-Database-for-PostgreSQL-Hyperscale`).
 
 2. Navigate to the following folder within: `\Hands-on lab\Resources\Apps`.
 
@@ -540,7 +543,7 @@ In this exercise, you will configure and run the `KafkaProducer` application to 
 
    ![The lab files path is highlighted.](media/lab-files.png 'Lab files')
 
-4. Within the folder, open the `appconfig.json` file in a text editor, such as Notepad.
+4. Within the folder, open the `appsettings.json` file in a text editor, such as Notepad.
 
    ![The appsettings.json file is highlighted.](media/lab-files-windows.png 'appsettings.json')
 
@@ -578,9 +581,7 @@ Rollups are an integral piece of this solution because they provide fast, indexe
 
 When you look at the SQL scripts for the `five_minutely_aggregation` and `hourly_aggregation` functions below, you will notice that we are using incremental aggregation to support late, or incoming, data. This is accomplished by using `ON CONFLICT ... DO UPDATE` in the `INSERT` statement.
 
-When executing aggregations, you have the choice between append-only or incremental aggregation. Append-only aggregation (insert) supports all aggregates, including exact distinct and percentiles, but are more difficult to use when handling late data. This is because you have to keep track of which time periods have been aggregated already, since you aggregate events for a particular time period and append them to the rollup table once all the data for that period are available. Incremental aggregation (upsert), on the other hand, easily supports processing late data. The side effect is that it cannot handle all aggregates. We work around this limitation by using highly accurate approximation through HyperLogLog (HLL) and `TopN`. As stated previously, we are aggregating new events and upserting them to our rollup tables. You still need to be able to keep track of which events have already been aggregated.
-
-One way to keep track of which events have already been aggregated is to mark them as aggregated (`SET aggregated = true`). The problem with this approach is that it causes bloat and fragmentation. Another way would be to use a staging table to temporarily store events. This can cause catalog bloat and high overhead per batch, depending on how often your aggregation is run. The recommended approach is to [track the sequence number](https://www.citusdata.com/blog/2018/06/14/scalable-incremental-data-aggregation/). This means that each event has a monotonically increasing sequence number (`i`). We store sequence number `S` up to the point in which all events were aggregated. To aggregate, we pull a number from the sequence (`E`), briefly block writes to ensure there are no more in-flight transactions using sequence numbers <= `E` (`EXECUTE format('LOCK %s IN EXCLUSIVE MODE', table_to_lock)`), then incrementally aggregate all events with sequence numbers `S` < `i` <= `E`. Finally, we set `S` = `E` and repeat this process on each upsert. You can see exactly how we're doing this in the `incremental_rollup_window` function below. The `rollups` table keeps track of the sequence for us. The `five_minutely_aggregation` and `hourly_aggregation` functions call `incremental_rollup_window` to retrieve the range of page views that can be safely aggregated, using the start and end `event_id` values (`start_id` and `end_id`).
+When executing aggregations, you have the choice between append-only or incremental aggregation. Append-only aggregation (insert) supports all aggregates, including exact distinct and percentiles, but are more difficult to use when handling late data. This is because you have to keep track of which time periods have been aggregated already, since you aggregate events for a particular time period and append them to the rollup table once all the data for that period are available. Incremental aggregation (upsert), on the other hand, easily supports processing late data. The side effect is that it cannot handle all aggregates. We work around this limitation by using highly accurate approximation through HyperLogLog (HLL) and `TopN`. As stated previously, we are aggregating new events and upserting them to our rollup tables. You still need to be able to keep track of which events have already been aggregated. We will do that by tracking the sequence number. There are a few other approaches to do this, and you can read more about why this approach is recommended [here](https://www.citusdata.com/blog/2018/06/14/scalable-incremental-data-aggregation/).
 
 Advanced aggregation is accomplished by using HyperLogLog (HLL) and `TopN`, as discussed earlier. For this topic, reference the `five_minutely_aggregation` and `hourly_aggregation` functions below. Also, please note that where you see the special `excluded` table in the query, it is used to reference values originally proposed for insertion. We are using `hll_has_bigint` to hash the HLL columns `device_id` and `session_id`. This hash function produces a uniformly distributed bit string. HLL does this by dividing values into streams and averaging the results. The `hll_add_agg` and `hll_union` are used to do incremental rollups. `TopN` keeps track of a set of counters in JSONB with the explicit goal of determining the top N (like top 10) items (or our "heavy hitters"). In our case, we're using it to return the top 1000 devices by `device_id`. Similar to HLL, we are using `topn_add_agg` and `topn_union` to do incremental rollups. The `topn_union` function merges `TopN` objects over time periods and dimensions.
 
@@ -759,10 +760,12 @@ You will then execute queries against the rollup tables that can be used for WWI
    SELECT hourly_aggregation();
    ```
 
+    > The following queries don’t have a `customer_id` in the filter, so these queries will be executed in parallel across all the different nodes in the cluster, leading to fast query performance.
+
 5. Clear the query window and paste the following to retrieve the total number of events and count of distinct devices in the last 15 minutes:
 
    ```sql
-   SELECT sum(event_count) num_events, hll_cardinality(hll_union_agg(device_distinct_count)) distinct_devices
+   SELECT sum(event_count) num_events, ceil(hll_cardinality(hll_union_agg(device_distinct_count))) distinct_devices
    FROM rollup_events_5min where minute >=now()-interval '15 minutes' AND minute <=now();
    ```
 
@@ -770,34 +773,36 @@ You will then execute queries against the rollup tables that can be used for WWI
 
    ![The results output of the first dashboard query is displayed.](media/dashboard-query1.png 'Dashboard query 1')
 
-6. Clear the query window and paste the following to retrieve the total number of events and count of distinct devices in the last 15 minutes by `customer_id`. Remember, the data is sharded by tenant (Customer ID):
-
-   ```sql
-   SELECT sum(event_count) num_events, hll_cardinality(hll_union_agg(device_distinct_count)) distinct_devices
-   FROM rollup_events_5min where minute >=now()-interval '15 minutes' AND minute <=now() AND customer_id=1;
-   ```
-
-7. Clear the query window and paste the following to return the count of distinct sessions over the past week:
+6. Clear the query window and paste the following to return the count of distinct sessions over the past week:
 
    ```sql
    SELECT sum(event_count) num_events,
-         hll_cardinality(hll_union_agg(device_distinct_count)) distinct_devices
+         ceil(hll_cardinality(hll_union_agg(device_distinct_count))) distinct_devices
    FROM rollup_events_1hr
    WHERE hour >=date_trunc('day',now())-interval '7 days'
      AND hour <=now();
    ```
 
-8. Clear the query window and paste the following to return the trend of app usage in the past 2 days, broken down by hour:
+7. Clear the query window and paste the following to return the trend of app usage in the past 2 days, broken down by hour:
 
    ```sql
    SELECT hour,
          sum(event_count) event_count,
-         hll_cardinality(hll_union_agg(device_distinct_count)) device_count,
-         hll_cardinality(hll_union_agg(session_distinct_count)) session_count
+         ceil(hll_cardinality(hll_union_agg(device_distinct_count))) device_count,
+         ceil(hll_cardinality(hll_union_agg(session_distinct_count))) session_count
    FROM rollup_events_1hr
    WHERE hour >=date_trunc('day',now())-interval '2 days'
      AND hour <=now()
    GROUP BY hour;
+   ```
+
+    > As the next two queries have a filter on `customer_id`, Citus will route the queries to only the node which has the data for that particular customer without needing to touch data for the remaining customers. This leads to faster performance as you need to scan only a small portion of the data.
+
+8. Clear the query window and paste the following to retrieve the total number of events and count of distinct devices in the last 15 minutes by `customer_id`. Remember, the data is sharded by tenant (Customer ID):
+
+   ```sql
+   SELECT sum(event_count) num_events, ceil(hll_cardinality(hll_union_agg(device_distinct_count))) distinct_devices
+   FROM rollup_events_5min where minute >=now()-interval '15 minutes' AND minute <=now() AND customer_id=1;
    ```
 
 9. Clear the query window and paste the following to return the top devices in the past 30 minutes for customer 2:

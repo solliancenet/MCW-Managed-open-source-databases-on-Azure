@@ -1,4 +1,4 @@
-# Managed open source databases on Azure
+# Visualizing real-time data with Azure Database for PostgreSQL Hyperscale
 
 Wide World Importers (WWI) is a traditional brick and mortar business with a long track record of success, generating profits through strong retail store sales of their unique offering of affordable products from around the world. They have a great training program for new employees, that focuses on connecting with their customers and providing great face-to-face customer service. This strong focus on customer relationships has helped set WWI apart from their competitors.
 

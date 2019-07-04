@@ -1,7 +1,7 @@
 ![](https://github.com/Microsoft/MCW-Template-Cloud-Workshop/raw/master/Media/ms-cloud-workshop.png 'Microsoft Cloud Workshops')
 
 <div class="MCWHeader1">
-Managed open source databases on Azure
+Visualizing real-time data with Azure Database for PostgreSQL Hyperscale
 </div>
 
 <div class="MCWHeader2">
@@ -31,7 +31,7 @@ Microsoft and the trademarks listed at <https://www.microsoft.com/en-us/legal/in
   - [Whiteboard design session flow](#Whiteboard-design-session-flow)
   - [Before the whiteboard design session: How to prepare](#Before-the-whiteboard-design-session-How-to-prepare)
   - [During the whiteboard design session: Tips for an effective whiteboard design session](#During-the-whiteboard-design-session-Tips-for-an-effective-whiteboard-design-session)
-- [Managed open source databases on Azure whiteboard design session student guide](#Managed-open-source-databases-on-Azure-whiteboard-design-session-student-guide)
+- [Visualizing real-time data with Azure Database for PostgreSQL Hyperscale whiteboard design session student guide](#Visualizing-real-time-data-with-Azure-Database-for-PostgreSQL-Hyperscale-whiteboard-design-session-student-guide)
   - [Abstract and learning objectives](#Abstract-and-learning-objectives)
   - [Step 1: Review the customer case study](#Step-1-Review-the-customer-case-study)
     - [Customer situation](#Customer-situation)
@@ -42,7 +42,7 @@ Microsoft and the trademarks listed at <https://www.microsoft.com/en-us/legal/in
   - [Step 3: Present the solution](#Step-3-Present-the-solution)
   - [Wrap-up](#Wrap-up)
   - [Additional references](#Additional-references)
-- [Managed open source databases on Azure whiteboard design session trainer guide](#Managed-open-source-databases-on-Azure-whiteboard-design-session-trainer-guide)
+- [Visualizing real-time data with Azure Database for PostgreSQL Hyperscale whiteboard design session trainer guide](#Visualizing-real-time-data-with-Azure-Database-for-PostgreSQL-Hyperscale-whiteboard-design-session-trainer-guide)
   - [Step 1: Review the customer case study](#Step-1-Review-the-customer-case-study-1)
   - [Step 2: Design a proof of concept solution](#Step-2-Design-a-proof-of-concept-solution-1)
   - [Step 3: Present the solution](#Step-3-Present-the-solution-1)
@@ -166,7 +166,7 @@ When participants are doing activities, you can **look ahead to refresh your mem
 
 **Wait for responses**. If you ask a question such as, "What's your experience with (fill in the blank)?" then wait. Do not be afraid of a little silence. If you leap into the silence, your participants will feel you are not serious about involving them and will become passive. Give participants a chance to think, and if no one answers, patiently ask again. You will usually get a response.
 
-# Managed open source databases on Azure whiteboard design session student guide
+# Visualizing real-time data with Azure Database for PostgreSQL Hyperscale whiteboard design session student guide
 
 ## Abstract and learning objectives
 
@@ -352,7 +352,7 @@ Directions: Tables reconvene with the larger group to hear the facilitator/SME s
 | High availability clusters for On-premises data gateway |       <https://docs.microsoft.com/en-us/power-bi/service-gateway-high-availability-clusters>       |
 | Azure Database Migration Service                        |                                      <https://aka.ms/get-dms>                                      |
 
-# Managed open source databases on Azure whiteboard design session trainer guide
+# Visualizing real-time data with Azure Database for PostgreSQL Hyperscale whiteboard design session trainer guide
 
 ## Step 1: Review the customer case study
 
@@ -416,7 +416,7 @@ _Scale_
 
    Azure Database for PostgreSQL is a fully managed service built on the open source PostgreSQL database engine. It provides high availability and performance with monitoring and alerting, enterprise-grade security and compliance, automatic backups, data secured at-rest and in-motion, and full compatibility with PostgreSQL extensions with little to no administration required.
 
-   Hyperscale clusters are enabled by Citus, which is an extension of PostgreSQL that allows you to horizontally scale queries across multiple machines, using sharding and partitioning techniques. Because of this, the query engine parallelizes incoming SQL queries across these servers for faster response times on large datasets. Data sharding is transparently handled for you and allows your existing PostgreSQL applications to take advantage of the benefits distributed data storage and querying provides, with minimal changes. This means that Wide World Importer's multi-tenant, real-time operational analytics requirements will be met with little effort on their part.
+   Hyperscale clusters are enabled by Citus, which is an extension of PostgreSQL that allows you to horizontally scale queries across multiple machines, using sharding and partitioning techniques. Because of this, the query engine parallelizes and routes incoming SQL queries across these servers for faster response times on large datasets. Data sharding is transparently handled for you and allows your existing PostgreSQL applications to take advantage of the benefits distributed data storage and querying provides, with minimal changes. This means that Wide World Importer's multi-tenant, real-time operational analytics requirements will be met with little effort on their part.
 
    A Hyperscale server group (database cluster) consists of a coordinator node and several worker nodes. To scale up, you define the number of cores and storage you require per coordinator node and worker node. You can select up to 32 vCores with 8 GiB RAM per vCore and up to 2 TiB of storage with up to 3 IOPS / GiB per node. To scale out, you can define the number of worker nodes, between 2 and 20. If you require more than 20 worker nodes, you can submit a support request.
 
@@ -452,7 +452,7 @@ _Scale_
    SELECT create_distributed_table('events','tenant_id');
    ```
 
-   Partitioning is the key to high performance and being able to scale out across several database nodes. One of the keys to fast data loading is to avoid using large indexes. Traditionally, you would use block-range (BRIN) indexes to speed up range scans over roughly-sorted data. However, when you have unsorted data, BRIN indexes tend to perform poorly. Partitioning helps keep indexes small. It does this by dividing tables into partitions, avoiding fragmentation of data while maintaining smaller indexes.
+   Partitioning is the key to high performance, as it allows you to break up data into further smaller chunks based on time windows. One of the keys to fast data loading is to avoid using large indexes. Traditionally, you would use block-range (BRIN) indexes to speed up range scans over roughly-sorted data. However, when you have unsorted data, BRIN indexes tend to perform poorly. Partitioning helps keep indexes small. It does this by dividing tables into partitions, avoiding fragmentation of data while maintaining smaller indexes. In addition, it allows you to query only a smaller portion of the data when you run queries for particular time windows, leading to faster SELECT performance.
 
 _Multi-tenancy_
 
@@ -508,7 +508,7 @@ _Process data while generating roll-ups_
    SELECT cron.schedule('*/5 * * * *', 'SELECT five_minutely_aggregation();');
    ```
 
-   The cron notation makes it simple to schedule execution in a number of ways, such as minutely, hourly, daily, weekly, monthly, day of week, etc.
+   `pg_cron` is a simple cron-based job scheduler for PostgreSQL that runs inside the database as an extension. That way, you don’t need to have a separate server to schedule cron jobs within your database. As it uses the same syntax as regular cron, it simple to schedule execution in a number of ways, such as minutely, hourly, daily, weekly, monthly, day of week, etc.
 
 2. Within your rollup functions that perform the background aggregations, how would you implement incremental aggregations to handle late, incoming, data while keeping track of which time periods have been aggregated already?
 
@@ -619,7 +619,7 @@ _Process data while generating roll-ups_
 
 3. Incremental aggregations sacrifice the ability to handle all types of aggregates for ease of use when tracking what has already been aggregated when processing late data. What advanced aggregation options can you use to provide highly accurate approximation in this situation?
 
-   Advanced aggregation is accomplished by using HyperLogLog (HLL) and `TopN`, as discussed earlier. For this topic, reference the `five_minutely_aggregation` function above. Also, please note that where you see the special `excluded` table in the query, it is used to reference values originally proposed for insertion. We are using `hll_has_bigint` to hash the HLL columns `device_id` and `session_id`. This hash function produces a uniformly distributed bit string. HLL does this by dividing values into streams and averaging the results. The `hll_add_agg` and `hll_union` are used to do incremental rollups. `TopN` keeps track of a set of counters in JSONB with the explicit goal of determining the top N (like top 10) items (or our "heavy hitters"). In our case, we're using it to return the top 1000 devices by `device_id`. Similar to HLL, we are using `topn_add_agg` and `topn_union` to do incremental rollups. The `topn_union` function merges `TopN` objects over time periods and dimensions.
+   Advanced aggregation is accomplished by using HyperLogLog (HLL) and `TopN`, as discussed earlier. For this topic, reference the `five_minutely_aggregation` function above. Also, please note that where you see the special `excluded` table in the query, it is used to reference values originally proposed for insertion. We are using `hll_hash_bigint` to hash the HLL columns `device_id` and `session_id`. This hash function produces a uniformly distributed bit string. HLL does this by dividing values into streams and averaging the results. The `hll_add_agg` and `hll_union` are used to do incremental rollups. `TopN` keeps track of a set of counters in JSONB with the explicit goal of determining the top N (like top 10) items (or our "heavy hitters"). In our case, we're using it to return the top 1000 devices by `device_id`. Similar to HLL, we are using `topn_add_agg` and `topn_union` to do incremental rollups. The `topn_union` function merges `TopN` objects over time periods and dimensions.
 
 _Resilient stream processing_
 
@@ -629,8 +629,6 @@ _Resilient stream processing_
 
 2. WWI sometimes encounters errors while stream processing, and has a difficult time recovering and continuing where they left off if the stream has to stop for any reason. What would you recommend for a resilient stream processing solution to reduce errors and prevent lost data?
 
-   Apache Spark is the de facto standard in Big Data processing that is built to conduct batch, interactive, and real-time processing using the same core engine. This gives you the benefit of having a unified framework for processing these varying latencies (speeds) of Big Data, as well as being able to conduct machine learning, deep learning, graph processing, and advanced analytics in one place. Spark has become a leader in the data engineering and data science industry due to its ease of use, large ecosystem of tools and libraries, and for the fact that it runs batch and streaming workloads 100x faster than Hadoop on average. Azure Databricks provides one of the best options for running Spark on managed clusters in Azure.
-
    WWI can connect to the Kafka endpoint provided by Event Hubs, directly from a Databricks notebook, and use Spark Structured Streaming to process the data in real-time. Azure Key Vault can be used to secure secrets, such as the Kafka and PostgreSQL connection strings and be used as a backing store for a Databricks secret store. This will prevent any accidental leakage of these secrets.
 
    In Structured Streaming, if you enable checkpointing for a streaming query, then you can restart the query after a failure and the restarted query will continue where the failed one left off, while ensuring fault tolerance and data consistency guarantees. If you do not have a checkpoint directory, when the streaming job stops, you lose all state around your streaming job and upon restart, you start from scratch.
@@ -639,7 +637,9 @@ _Resilient stream processing_
 
 3. Could your chosen stream processing solution also provide the ability to conduct batch processing against large amounts of data while sharing much of the data processing and cleansing code, as well as code to write data to PostgreSQL?
 
-   As stated in the previous answer, Apache Spark offers a unified platform for performing batch, interactive query, and real-time stream processing. Clusters are defined by selecting VM sizes and capabilities (compute or memory-optimized, GPU, etc.), as well as the number of worker nodes for scaling out Spark processing to handle demanding workloads. You can use Python, Scala, SQL, and R, along with a broad ecosystem of libraries you can use for data manipulation and advanced analytics.
+   Apache Spark is the de facto standard in Big Data processing that is built to conduct batch, interactive, and real-time processing using the same core engine. This gives you the benefit of having a unified framework for processing these varying latencies (speeds) of Big Data, as well as being able to conduct machine learning, deep learning, graph processing, and advanced analytics in one place. Spark has become a leader in the data engineering and data science industry due to its ease of use, large ecosystem of tools and libraries, and for the fact that it runs batch and streaming workloads 100x faster than Hadoop on average. Azure Databricks provides one of the best options for running Spark on managed clusters in Azure.
+   
+   Apache Spark offers a unified platform for performing batch, interactive query, and real-time stream processing. Clusters are defined by selecting VM sizes and capabilities (compute or memory-optimized, GPU, etc.), as well as the number of worker nodes for scaling out Spark processing to handle demanding workloads. You can use Python, Scala, SQL, and R, along with a broad ecosystem of libraries you can use for data manipulation and advanced analytics.
 
    To connect to PostgreSQL from Azure Databricks, you can use the included `org.postgresql.Driver` driver and connect to it with a simple JDBC connection string that can be securely stored in Azure Key Vault and access from within a notebook or library.
 
@@ -659,11 +659,11 @@ _Advanced dashboards_
 
 1. Does Azure offer a managed PostgreSQL database that can handle our scale requirements?
 
-   Yes! The new Azure Database for PostgreSQL Hyperscale (Citus) option allows you to configure scaling up and scaling out the coordinator and worker nodes of your database cluster. It is ideal for applications that require greater scale and performance than the single server option, and generally for workloads that are at or beyond 100 GB of data.
+   Yes! The new Azure Database for PostgreSQL Hyperscale (Citus) option allows you to configure scaling up and scaling out the nodes of your database cluster. It is ideal for applications that require greater scale and performance than the single server option, and generally for workloads that are at or beyond 100 GB of data.
 
 2. We are worried about the re-engineering effort involved in sharding our database, from modifying the schema to updating our applications to account for the changes.
 
-   The sharding logic is automatically handled for you by the Hyperscale server group. WWI wants to use sharding because it allows them to horizontally scale their database across multiple managed Postgres servers. Another reason they want to use sharding is for multi-tenancy. They should configure the distribution column to be the Tenant ID. When this same ID is used in the events table as well as rollup tables, the data stored in both types of table are automatically co-located by Citus. Hyperscale clusters will allow them to parallelize their aggregations across shards, then perform a SELECT on a rollup for a particular tenant from the dashboard, and have it automatically routed to the appropriate shard. All of this can be done with minimal schema changes, and potentially no code changes.
+   The sharding logic is automatically handled for you by the Hyperscale (Citus) server group. WWI wants to use sharding because it allows them to horizontally scale their database across multiple managed Postgres servers. Another reason they want to use sharding is for multi-tenancy. They should configure the distribution column to be the Tenant ID. When this same ID is used in the events table as well as rollup tables, the data stored in both types of table are automatically co-located by Citus. Hyperscale clusters will allow them to parallelize their aggregations across shards, then perform a SELECT on a rollup for a particular tenant from the dashboard, and have it automatically routed to the appropriate shard. All of this can be done with minimal schema and code changes.
 
 3. Is there a way to migrate to PostgreSQL on Azure with minimal downtime?
 
@@ -671,10 +671,10 @@ _Advanced dashboards_
 
 4. We've looked at several PostgreSQL-based data platforms for adding enhancements like distributed data and scalability, but we are concerned about our existing applications being compatible and having access to the latest versions of PostgreSQL.
 
-   The Hyperscale option uses Citus to provide the distributed data storage capabilities like sharding and various partitioning plans. However, it was built to be an extension of PostgreSQL, not a forked version with that has to be modified every time there's a new version of PostgreSQL. Because of this, WWI can continue using the latest versions of PostgreSQL and maintain full compatibility with the single server option and standard connection libraries.
+   The Hyperscale option uses Citus to provide capabilities like sharding, query routing, and query parallelization. However, it is built as an extension of PostgreSQL, not a forked version with that has to be modified every time there's a new version of PostgreSQL. Because of this, WWI can continue using the latest versions of PostgreSQL and maintain full compatibility with the single server option and standard connection libraries.
 
 ## Customer quote (to be read back to the attendees at the end)
 
-"Migrating our PostgreSQL databases to Azure with the Hyperscale server group option has both simplified our initial plans of manually sharding our databases and handling multitenancy, while greatly increasing the performance of our most complex queries. The combination of services Microsoft has helped us use to build a resilient and scalable real-time data processing pipeline enabled us to put in place a future-proof design under budget and in record time."
+"Migrating our PostgreSQL databases to Azure with the Hyperscale (Citus) deployment option has both simplified our initial plans of manually sharding our databases and handling multitenancy, while greatly increasing the performance of our most complex queries. The combination of services Microsoft has helped us use to build a resilient and scalable real-time data processing pipeline enabled us to put in place a future-proof design under budget and in record time."
 
 Charlene Mathis, CIO, Wide World Importers

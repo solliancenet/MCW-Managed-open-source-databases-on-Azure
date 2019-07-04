@@ -1,7 +1,7 @@
 ![](https://github.com/Microsoft/MCW-Template-Cloud-Workshop/raw/master/Media/ms-cloud-workshop.png 'Microsoft Cloud Workshops')
 
 <div class="MCWHeader1">
-Managed open source databases on Azure
+Visualizing real-time data with Azure Database for PostgreSQL Hyperscale
 </div>
 
 <div class="MCWHeader2">
@@ -26,22 +26,22 @@ Microsoft and the trademarks listed at <https://www.microsoft.com/en-us/legal/in
 
 <!-- TOC -->
 
-- [Managed open source databases on Azure before the hands-on lab setup guide](#Managed-open-source-databases-on-Azure-before-the-hands-on-lab-setup-guide)
+- [Visualizing real-time data with Azure Database for PostgreSQL Hyperscale before the hands-on lab setup guide](#Visualizing-real-time-data-with-Azure-Database-for-PostgreSQL-Hyperscale-before-the-hands-on-lab-setup-guide)
   - [Requirements](#Requirements)
   - [Before the hands-on lab](#Before-the-hands-on-lab)
     - [Task 1: Create an Azure resource group using Azure Cloud Shell](#Task-1-Create-an-Azure-resource-group-using-Azure-Cloud-Shell)
     - [Task 2: Create Cloud Shell variables](#Task-2-Create-Cloud-Shell-variables)
     - [Task 3: Create an Azure Key Vault](#Task-3-Create-an-Azure-Key-Vault)
-    - [Task 3: Create an event hub with Kafka enabled](#Task-3-Create-an-event-hub-with-Kafka-enabled)
-    - [Task 4: Create an Azure Data Lake Storage Gen2 account](#Task-4-Create-an-Azure-Data-Lake-Storage-Gen2-account)
-    - [Task 5: Create Azure Databricks workspace](#Task-5-Create-Azure-Databricks-workspace)
-    - [Task 6: Deploy Azure Database for PostgreSQL](#Task-6-Deploy-Azure-Database-for-PostgreSQL)
-    - [Task 7: Install Npgsql](#Task-7-Install-Npgsql)
-    - [Task 8: Download the starter files](#Task-8-Download-the-starter-files)
+    - [Task 4: Create an event hub with Kafka enabled](#Task-4-Create-an-event-hub-with-Kafka-enabled)
+    - [Task 5: Create an Azure Data Lake Storage Gen2 account](#Task-5-Create-an-Azure-Data-Lake-Storage-Gen2-account)
+    - [Task 6: Create Azure Databricks workspace](#Task-6-Create-Azure-Databricks-workspace)
+    - [Task 7: Deploy Azure Database for PostgreSQL](#Task-7-Deploy-Azure-Database-for-PostgreSQL)
+    - [Task 8: Install Npgsql](#Task-8-Install-Npgsql)
+    - [Task 9: Download the starter files](#Task-9-Download-the-starter-files)
 
 <!-- /TOC -->
 
-# Managed open source databases on Azure before the hands-on lab setup guide
+# Visualizing real-time data with Azure Database for PostgreSQL Hyperscale before the hands-on lab setup guide
 
 ## Requirements
 
@@ -99,10 +99,10 @@ In this task, you will use the Azure Cloud shell to create a new Azure Resource 
    resourcegroup=hands-on-lab-SUFFIX
    ```
 
-8. Create a variable to hold your resource group location name. Replace the `westus` location with a location closest to you. This same location will be used when provisioning other Azure resources.
+8. Create a variable to hold your resource group location name. Replace the `westus2` location with a location closest to you. This same location will be used when provisioning other Azure resources. **Please note** that currently, the only regions available for deploying to the Azure Database for PostgreSQL Hyperscale (Citus) deployment option are East US 2, West US 2, West Europe, SouthEast Asia. Consider using one of these: `westus2`, `eastus2`, `westeurope`, or `southeastasia`.
 
    ```bash
-   location=westus
+   location=westus2
    ```
 
    > For a list of valid location names, execute: `az account list-locations -o table`
@@ -151,7 +151,7 @@ Azure Key Vault is a cloud service that works as a secure secrets store. You can
    az keyvault create --name $keyvault --resource-group $resourcegroup --location $location
    ```
 
-### Task 3: Create an event hub with Kafka enabled
+### Task 4: Create an event hub with Kafka enabled
 
 In this task, you will first create an Event Hubs namespace with Kafka enabled. An Event Hubs namespace provides a unique scoping container, referenced by its fully qualified domain name, in which you create one or more event hubs.
 
@@ -167,7 +167,7 @@ In this task, you will first create an Event Hubs namespace with Kafka enabled. 
    az eventhubs eventhub create --name clickstream --resource-group $resourcegroup --namespace-name $namespace
    ```
 
-### Task 4: Create an Azure Data Lake Storage Gen2 account
+### Task 5: Create an Azure Data Lake Storage Gen2 account
 
 Azure Data Lake Storage Gen2 provides a very fast native directory-based file system optimized for streaming workloads and tailored to work with the Hadoop Distributed File System (HDFS). You will access ADLS Gen2 data from Azure Databricks, using the [ABFS driver](https://docs.microsoft.com/en-us/azure/storage/blobs/data-lake-storage-abfs-driver).
 
@@ -182,7 +182,7 @@ Azure Data Lake Storage Gen2 provides a very fast native directory-based file sy
     --kind StorageV2
    ```
 
-### Task 5: Create Azure Databricks workspace
+### Task 6: Create Azure Databricks workspace
 
 In this task, you will use the Azure Cloud Shell to create a new Azure Databricks workspace with an Azure Resource Management (ARM) template. During the lab, you will create a Spark cluster within your Azure Databricks workspace to perform real-time stream processing against website clickstream data that is sent through Event Hubs using the Kafka protocol.
 
@@ -196,7 +196,7 @@ In this task, you will use the Azure Cloud Shell to create a new Azure Databrick
      --parameters workspaceName=$workspace pricingTier=premium location=$location
    ```
 
-### Task 6: Deploy Azure Database for PostgreSQL
+### Task 7: Deploy Azure Database for PostgreSQL
 
 In this task, you will deploy a new Azure Database for PostgreSQL, selecting the Hyperscale (Citus) option.
 
@@ -204,7 +204,11 @@ In this task, you will deploy a new Azure Database for PostgreSQL, selecting the
 
    ![Create a resource is highlighted as well as the search term and result.](media/search-azure-db-for-postgresql.png 'Create a resource')
 
-2. Fill out the new server details form with the following information:
+2. Select the **Hyperscale (Citus) server group** deployment option.
+
+   ![The Hyperscale (Citus) server group option is highlighted.](media/select-hyperscale.png 'Select Azure Database for PostgreSQL deployment option')
+
+3. Fill out the new server details form with the following information:
 
    - Resource group: select the resource group you created earlier.
    - Server group name: enter a unique name for the new server group, such as **wwi-postgres-SUFFIX**, which will also be used for a server subdomain.
@@ -214,21 +218,21 @@ In this task, you will deploy a new Azure Database for PostgreSQL, selecting the
 
    > The server admin password that you specify here is required to log in to the server and its databases. Remember or record this information for later use.
 
-3. Select **Configure server group**. Leave the settings in that section unchanged and select **Save**.
+4. Select **Configure server group**. Leave the settings in that section unchanged and select **Save**.
 
    ![The form fields are filled out using the previously defined values.](media/create-hyperscale-server-group.png 'Hyperscale server group')
 
-4. Select **Review + create** and then **Create** to provision the server. Provisioning takes **up to 10** minutes.
+5. Select **Review + create** and then **Create** to provision the server. Provisioning takes **up to 10** minutes.
 
-5. The page will redirect to monitor deployment. When the live status changes from **Your deployment is underway** to **Your deployment is complete**, select the **Outputs** menu item on the left of the page. The outputs page will contain a coordinator hostname with a button next to it to copy the value to the clipboard. Record this information for later use.
+6. The page will redirect to monitor deployment. When the live status changes from **Your deployment is underway** to **Your deployment is complete**, select the **Outputs** menu item on the left of the page. The outputs page will contain a coordinator hostname with a button next to it to copy the value to the clipboard. Record this information for later use.
 
    ![The deployment output shows the Coordinator Hostname value after deployment is complete.](media/postgres-coordinator-hostname.png 'Outputs')
 
-6. Select **Overview** to view the deployment details, then select **Go to resource**.
+7. Select **Overview** to view the deployment details, then select **Go to resource**.
 
    ![The Overview menu item and Go to resource button are both highlighted.](media/postgres-deployment-overview.png 'Deployment overview')
 
-7. Select **Firewall** in the left-hand menu underneath Security. In the Firewall rules blade, enter the following to create a new firewall rule to allow all connections (from your machine and Azure services):
+8. Select **Firewall** in the left-hand menu underneath Security. In the Firewall rules blade, enter the following to create a new firewall rule to allow all connections (from your machine and Azure services):
 
    - **Firewall rule name**: ALL
    - **Start IP**: 0.0.0.0
@@ -236,9 +240,9 @@ In this task, you will deploy a new Azure Database for PostgreSQL, selecting the
 
    ![The Firewall rules blade is displayed.](media/postgres-firewall.png 'Firewall rules')
 
-8. Select **Save** to apply the new firewall rule.
+9. Select **Save** to apply the new firewall rule.
 
-### Task 7: Install Npgsql
+### Task 8: Install Npgsql
 
 Npgsql is a .NET data provider for PostgreSQL and is required to connect Power BI Desktop to your PostgreSQL database cluster. Make sure you have installed [Power BI Desktop](https://powerbi.microsoft.com/desktop/) before continuing.
 
@@ -250,18 +254,18 @@ Npgsql is a .NET data provider for PostgreSQL and is required to connect Power B
 
    ![The Npgsql GAC Installation feature is selected.](media/npgsql-features.png 'Npgsql Custom Setup')
 
-### Task 8: Download the starter files
+### Task 9: Download the starter files
 
 Download a starter project that includes a payment data generator that sends real-time payment data for processing by your lab solution, as well as data files used in the lab.
 
-1. From your LabVM, download the starter files by downloading a .zip copy of the Cosmos DB real-time advanced analytics GitHub repo.
+1. From your lab computer, download the starter files by downloading a .zip copy of the Cosmos DB real-time advanced analytics GitHub repo.
 
-2. In a web browser, navigate to the [Cosmos DB real-time advanced analytics MCW repo](https://github.com/solliancenet/MCW-Managed-open-source-databases-on-Azure). TODO: UPDATE URL
+2. In a web browser, navigate to the [Visualizing real-time data with Azure Database for PostgreSQL Hyperscale MCW repo](https://github.com/microsoft/MCW-Real-time-data-with-Azure-Database-for-PostgreSQL-Hyperscale).
 
 3. On the repo page, select **Clone or download**, then select **Download ZIP**.
 
    ![Download .zip containing the repository](media/github-download-repo.png 'Download ZIP')
 
-4. Unzip the contents to your root hard drive (i.e. `C:\`). This will create a folder on your root drive named `MCW-Managed-open-source-databases-on-Azure-master`.
+4. Unzip the contents to your root hard drive (i.e. `C:\`). This will create a folder on your root drive named `MCW-Real-time-data-with-Azure-Database-for-PostgreSQL-Hyperscale`.
 
 You should follow all steps provided _before_ performing the Hands-on lab.
