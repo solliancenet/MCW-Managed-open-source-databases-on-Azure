@@ -24,13 +24,13 @@ In this workshop, you will learn how to use advanced features of the managed Pos
 
 At the end of this workshop, you will be better able to implement a highly scalable, managed open source database solution that can simultaneously handle real-time data and roll-up and serve data for advanced visualizations.
 
-### Whiteboard design session _(this will go in the readme and in the WDS document)_
+### Whiteboard design session
 
 In this whiteboard design session, you will work with a group to design a solution for using advanced features of the managed PostgreSQL PaaS service on Azure to make your database more scalable and able to handle the rapid ingest of streaming data while simultaneously generating and serving pre-aggregated data for reports. You will provide guidance for designing a resilient stream processing pipeline to ingest, process, and save real-time data to Postgres. Next, you will design a solution for exploring and gaining insights from flat files at scale, perform aggregates, and saving the valuable information to your database. Finally, you will provide guidance on how to create complex reports containing advanced visualizations, using a drag-and-drop interface, and use them to build a customizable dashboard that gets updated in real-time.
 
 At the end of this whiteboard design session, you will be better able to design a highly scalable, managed open source database solution that can simultaneously handle real-time data and roll-up and serve data for advanced visualizations.
 
-### Hands-on lab _(this will go in the readme and in the HOL document)_
+### Hands-on lab 
 
 In this hands-on lab, you will implement a proof-of-concept (PoC) for using advanced features of the managed PostgreSQL PaaS service on Azure. These features help make your database more scalable and able to handle the rapid ingest of streaming data while simultaneously generating and serving pre-aggregated data for reports. You will create a resilient stream processing pipeline to ingest, process, and save real-time data to Postgres. Next, you will implement a solution for exploring and gaining insights from flat files at scale, perform aggregates, and saving the valuable information to your database. Finally, you will create complex reports containing advanced visualizations, using a drag-and-drop interface, and use them to build a customizable dashboard that gets updated in real-time.
 
@@ -44,10 +44,6 @@ At the end of this hands-on-lab, you will be better able to implement a highly s
 - Power BI
 - Azure Cloud Shell
 - pgAdmin
-
-## Azure solutions
-
-_This is an internal reference and will be updated by project PM._
 
 ## Related references
 
