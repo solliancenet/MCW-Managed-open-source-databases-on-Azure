@@ -1,4 +1,4 @@
-![](https://github.com/Microsoft/MCW-Template-Cloud-Workshop/raw/master/Media/ms-cloud-workshop.png 'Microsoft Cloud Workshops')
+![Microsoft Cloud Workshops](https://github.com/Microsoft/MCW-Template-Cloud-Workshop/raw/master/Media/ms-cloud-workshop.png 'Microsoft Cloud Workshops')
 
 <div class="MCWHeader1">
 Visualizing real-time data with Azure Database for PostgreSQL Hyperscale
@@ -99,7 +99,7 @@ In this task, you will use the Azure Cloud shell to create a new Azure Resource 
    resourcegroup=hands-on-lab-SUFFIX
    ```
 
-8. Create a variable to hold your resource group location name. Replace the `westus2` location with a location closest to you. This same location will be used when provisioning other Azure resources. **Please note** that currently, the only regions available for deploying to the Azure Database for PostgreSQL Hyperscale (Citus) deployment option are East US 2, West US 2, West Europe, SouthEast Asia. Consider using one of these: `westus2`, `eastus2`, `westeurope`, or `southeastasia`.
+8. Create a variable to hold your resource group location name. Replace the `westus2` location with a location closest to you. This same location will be used when provisioning other Azure resources. **Please note** that currently, the only regions available for deploying to the Azure Database for PostgreSQL Hyperscale (Citus) deployment option are East US 2, West US 2, West Europe, Southeast Asia. Consider using one of these: `westus2`, `eastus2`, `westeurope`, or `southeastasia`.
 
    ```bash
    location=westus2
@@ -210,13 +210,13 @@ In this task, you will deploy a new Azure Database for PostgreSQL, selecting the
 
 3. Fill out the new server details form with the following information:
 
-   - Resource group: select the resource group you created earlier.
-   - Server group name: enter a unique name for the new server group, such as **wwi-postgres-SUFFIX**, which will also be used for a server subdomain.
-   - Admin username: currently required to be the value **citus**, and can't be changed.
-   - Password: enter `Abc!1234567890`.
-   - Location: use the location you provided when creating the resource group, or the closest available.
-
-   > The server admin password that you specify here is required to log in to the server and its databases. Remember or record this information for later use.
+   - **Resource group**: Select the resource group you created earlier.
+   - **Server group name**: Enter a unique name for the new server group, such as **wwi-postgres-SUFFIX**, which will also be used for a server subdomain.
+   - **Admin username**: Currently required to be the value **citus**, and can't be changed.
+   - **Password: Enter `Abc!1234567890`.
+   - **Location**: Use the location you provided when creating the resource group, or the closest available.
+   
+   > **Note**: The server admin password that you specify here is required to log in to the server and its databases. Remember or record this information for later use.
 
 4. Select **Configure server group**. Leave the settings in that section unchanged and select **Save**.
 
