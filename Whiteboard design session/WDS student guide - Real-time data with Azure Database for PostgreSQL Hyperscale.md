@@ -1,7 +1,7 @@
-![](https://github.com/Microsoft/MCW-Template-Cloud-Workshop/raw/master/Media/ms-cloud-workshop.png 'Microsoft Cloud Workshops')
+![Microsoft Cloud Workshops](https://github.com/Microsoft/MCW-Template-Cloud-Workshop/raw/master/Media/ms-cloud-workshop.png 'Microsoft Cloud Workshops')
 
 <div class="MCWHeader1">
-Visualizing real-time data with Azure Database for PostgreSQL Hyperscale
+Real-time data with Azure Database for PostgreSQL Hyperscale
 </div>
 
 <div class="MCWHeader2">
@@ -26,7 +26,7 @@ Microsoft and the trademarks listed at <https://www.microsoft.com/en-us/legal/in
 
 <!-- TOC -->
 
-- [Visualizing real-time data with Azure Database for PostgreSQL Hyperscale whiteboard design session student guide](#Visualizing-real-time-data-with-Azure-Database-for-PostgreSQL-Hyperscale-whiteboard-design-session-student-guide)
+- [Real-time data with Azure Database for PostgreSQL Hyperscale whiteboard design session student guide](#Real-time-data-with-Azure-Database-for-PostgreSQL-Hyperscale-whiteboard-design-session-student-guide)
   - [Abstract and learning objectives](#Abstract-and-learning-objectives)
   - [Step 1: Review the customer case study](#Step-1-Review-the-customer-case-study)
     - [Customer situation](#Customer-situation)
@@ -40,7 +40,7 @@ Microsoft and the trademarks listed at <https://www.microsoft.com/en-us/legal/in
 
 <!-- /TOC -->
 
-# Visualizing real-time data with Azure Database for PostgreSQL Hyperscale whiteboard design session student guide
+# Real-time data with Azure Database for PostgreSQL Hyperscale whiteboard design session student guide
 
 ## Abstract and learning objectives
 
