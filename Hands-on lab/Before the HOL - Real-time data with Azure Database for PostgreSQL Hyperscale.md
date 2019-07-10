@@ -1,7 +1,7 @@
 ![Microsoft Cloud Workshops](https://github.com/Microsoft/MCW-Template-Cloud-Workshop/raw/master/Media/ms-cloud-workshop.png 'Microsoft Cloud Workshops')
 
 <div class="MCWHeader1">
-Visualizing real-time data with Azure Database for PostgreSQL Hyperscale
+Real-time data with Azure Database for PostgreSQL Hyperscale
 </div>
 
 <div class="MCWHeader2">
@@ -26,7 +26,7 @@ Microsoft and the trademarks listed at <https://www.microsoft.com/en-us/legal/in
 
 <!-- TOC -->
 
-- [Visualizing real-time data with Azure Database for PostgreSQL Hyperscale before the hands-on lab setup guide](#Visualizing-real-time-data-with-Azure-Database-for-PostgreSQL-Hyperscale-before-the-hands-on-lab-setup-guide)
+- [Real-time data with Azure Database for PostgreSQL Hyperscale before the hands-on lab setup guide](#Real-time-data-with-Azure-Database-for-PostgreSQL-Hyperscale-before-the-hands-on-lab-setup-guide)
   - [Requirements](#Requirements)
   - [Before the hands-on lab](#Before-the-hands-on-lab)
     - [Task 1: Create an Azure resource group using Azure Cloud Shell](#Task-1-Create-an-Azure-resource-group-using-Azure-Cloud-Shell)
@@ -41,7 +41,7 @@ Microsoft and the trademarks listed at <https://www.microsoft.com/en-us/legal/in
 
 <!-- /TOC -->
 
-# Visualizing real-time data with Azure Database for PostgreSQL Hyperscale before the hands-on lab setup guide
+# Real-time data with Azure Database for PostgreSQL Hyperscale before the hands-on lab setup guide
 
 ## Requirements
 
