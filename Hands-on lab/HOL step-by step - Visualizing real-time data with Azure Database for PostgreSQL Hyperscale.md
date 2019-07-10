@@ -1,4 +1,4 @@
-![](https://github.com/Microsoft/MCW-Template-Cloud-Workshop/raw/master/Media/ms-cloud-workshop.png 'Microsoft Cloud Workshops')
+![Microsoft Cloud Workshops](https://github.com/Microsoft/MCW-Template-Cloud-Workshop/raw/master/Media/ms-cloud-workshop.png 'Microsoft Cloud Workshops')
 
 <div class="MCWHeader1">
 Visualizing real-time data with Azure Database for PostgreSQL Hyperscale
@@ -80,14 +80,18 @@ Real-time marketing analysis is provided through interactive reports and dashboa
 Their current challenges with ReMarketable are:
 
 1. **Scale** - WWI is using a PostgreSQL database to store ReMarketable's data. Historical data is growing by over 2.9 GB rows of data per month. It is taking consistently longer to run complex queries. Queries that used to run in 3-5 seconds now take several minutes to complete. This is impacting their users' ability to evaluate up-to-date marketing and website use statistics. Instead of providing real-time reports for all users, they have to keep delaying report runs. They have scaled up their database, but this is becoming very expensive and they will soon hit a ceiling.
+
 2. **Multi-tenancy** - The nature of their marketing and site usage data would benefit from multi-tenancy. Some storefronts generate considerably more data than others and have more marketing analysts that run reports on them than others. WWI believes sharding their database would help take the pressure off lower-volume data stores and also help them scale out. However, this will require re-engineering their database schema and client applications. In addition, sharding will require additional maintenance and increased complexity of aggregated views. These additional challenges and required resources are why they have not pursued this option yet.
-3. **Process data while generating roll-ups** - Another byproduct of outgrowing their database is that WWI is having difficulty efficiently processing and ingesting streaming data, while at the same time generating reports for their dashboards. PostgreSQL is well-suited to handle multiple workloads simultaneously when the databases are properly configured and you are able to appropriately scale up or scale out to multiple nodes. WWI does needs help optimizing their database to handle these demanding workloads at scale. They have looked moving to a non-relational database to speed up queries, but that option added too much complexity to manage multiple databases, losing the ability to wrap their operations inside of transactions, re-architect their application, and migrate their historical data. In addition, they rely on Postgres' ability to create complicated ways of representing and indexing their data, which is impossible to do with a column store. Their need for high transaction volume and a real-time data set ruled out a lot of off-the-shelf data warehouses, where they would need to create a lambda architecture to handle both speeds of feeds.
+
+3. **Process data while generating roll-ups** - Another byproduct of outgrowing their database is that WWI is having difficulty efficiently processing and ingesting streaming data, while at the same time generating reports for their dashboards. PostgreSQL is well-suited to handle multiple workloads simultaneously when the databases are properly configured, and you are able to appropriately scale up or scale out to multiple nodes. WWI does needs help optimizing their database to handle these demanding workloads at scale. They have looked moving to a non-relational database to speed up queries, but that option added too much complexity to manage multiple databases, losing the ability to wrap their operations inside of transactions, re-architect their application, and migrate their historical data. In addition, they rely on Postgres' ability to create complicated ways of representing and indexing their data, which is impossible to do with a column store. Their need for high transaction volume and a real-time data set ruled out a lot of off-the-shelf data warehouses, where they would need to create a lambda architecture to handle both speeds of feeds.
+
 4. **Resilient stream processing** - WWI is processing their streaming data through a web-based cluster that balances HTTP requests in round-robin fashion. When a node is processing the data and writing it to Postgres, subsequent requests are handled by available nodes. However, if processing fails for any reason, they risk losing that data and have no way to pick up where it left off. They have tried creating their own poison queue to reprocess these failed messages, but if the failed node is unable to add the data to the queue, then it is lost. The WWI technical team is aware of existing products and services that can help improve their stream processing and add resiliency, but they currently lack the skills and bandwidth to implement a solution for these complex scenarios. They are interested to see how Azure can help them rapidly create a solution for resilient stream processing and reduce their technical debt.
+
 5. **Advanced dashboards** - They would like a way to more rapidly create reports and be able to display them on a dashboard that can be customized and show real-time updates.
 
 ## Solution architecture
 
-![High-level architecture.](../Media/outline-architecture.png 'High-level architecture')
+![High-level architecture described in text below.](../Media/outline-architecture.png 'High-level architecture')
 
 The solution begins with multiple sources of clickstream data, each from a different tenant, flowing in through a Kafka streaming ingest managed service provided by Azure Event Hubs. This allows Wide World Importers to continue using their existing code to produce Kafka events. An Apache Spark cluster running on Azure Databricks processes and transforms the data in real time, using Structured Streaming. Azure Data Lake Storage is used to store the Structured Streaming checkpoint for resiliency to recover from errors and prevent lost data. Azure Key Vault is used to securely store secrets, such as the Event Hubs and PostgreSQL connection strings, and serves as a backing for Azure Databricks secret scopes. All event data is stored written to an Azure Database for PostgreSQL managed Hyperscale (Citus) database cluster, offering both scale-up and scale-out capability with features that simplify sharding and partitioning time series and multi-tenant data. Data is periodically written to rollup tables, using a background process that runs on a scheduled basis, to provide extremely fast querying of pre-aggregated data that does not interfere with incoming streams of late-arriving data. Websites and Power BI reports and dashboards use this data to provide rich reports that can be run at scale with minimum processing time. An on-premises data gateway cluster runs on several VMs to update the Power BI dashboards at regular intervals to match the pre-aggregation processes that write to the rollup tables.
 
@@ -96,8 +100,8 @@ The solution begins with multiple sources of clickstream data, each from a diffe
 1. Microsoft Azure subscription must be pay-as-you-go or MSDN.
    - Trial subscriptions will not work.
    - **IMPORTANT**: To complete the OAuth 2.0 access components of this hands-on lab you must have permissions within your Azure subscription to create an App Registration and service principal within Azure Active Directory.
-2. Install [pgAdmin](https://www.pgadmin.org/download/) 4 or greater
-3. Install [Power BI Desktop](https://powerbi.microsoft.com/desktop/)
+2. Install [pgAdmin](https://www.pgadmin.org/download/) 4 or greater.
+3. Install [Power BI Desktop](https://powerbi.microsoft.com/desktop/).
 
 ## Before the hands-on lab
 
@@ -137,8 +141,8 @@ In this exercise, you will obtain your PostgreSQL connection string and use the 
    - **Port**: 5432
    - **Maintenance database**: citus
    - **Username**: citus
-   - **Password**: the administrative password you chose earlier (such as `Abc!1234567890`)
-   - **Save password?**: check the box
+   - **Password**: The administrative password you chose earlier (such as `Abc!1234567890`).
+   - **Save password?**: Check the box.
 
    ![The previously described fields are filled in within the Connection tab.](media/pgadmin-create-server-connection.png 'Create Server - Connection tab')
 
@@ -242,7 +246,7 @@ If we were not using HLL, we would be limited to creating a large number of roll
     SELECT create_distributed_table('events','customer_id');
    ```
 
-   > Note that we are sharding each of the tables on the `customer_id` column. This is done by calling the `create_distributed_table` function. When you run this function, Citus inserts metadata marking the table as distributed and creates shards on the worker nodes. Then incoming data into these tables is routed to the right node based on customer id. Because we are sharding on the same ID for our raw events table and rollup tables, our data stored in both types of table are automatically co-located for us by Citus.
+   > **Note**: We are sharding each of the tables on the `customer_id` column. This is done by calling the `create_distributed_table` function. When you run this function, Citus inserts metadata marking the table as distributed and creates shards on the worker nodes. Then incoming data into these tables is routed to the right node based on customer id. Because we are sharding on the same ID for our raw events table and rollup tables, our data stored in both types of table are automatically co-located for us by Citus.
 
 3. Press F5 to execute the query, or select the **Execute** button on the toolbar above.
 
@@ -344,7 +348,7 @@ In this task, you will obtain the Event Hubs connection string and store it as a
 
    - **Upload options**: Select Manual.
    - **Name**: Enter "Kafka-Server".
-   - **Value**: Paste the fully qualified domain name (FQDN) that points to your Event Hubs namespace from the connection string (eg. `wwi-namespace-SUFFIX.servicebus.windows.net`). The FQDN can be found within your connection string as follows:
+   - **Value**: Paste the fully qualified domain name (FQDN) that points to your Event Hubs namespace from the connection string (e.g. `wwi-namespace-SUFFIX.servicebus.windows.net`). The FQDN can be found within your connection string as follows:
 
    `Endpoint=sb://` **wwi-namespace-SUFFIX.servicebus.windows.net** `/;SharedAccessKeyName=XXXXXX;SharedAccessKey=XXXXXX`
 
@@ -491,7 +495,7 @@ In this task, you will connect to your Azure Databricks workspace and create a c
      spark.executor.extraJavaOptions -Djava.security.properties=
      ```
 
-     > The two values in the advanced options fixes an issue caused by GCM ciphers being disabled in Databricks version 5.1 and greater. Without these settings, you will receive the following error when attempting to connect to the PostgreSQL Hyperscale cluster: `SSL error: Received fatal alert: handshake_failure`.
+     > **Note**: The two values in the advanced options fixes an issue caused by GCM ciphers being disabled in Databricks version 5.1 and greater. Without these settings, you will receive the following error when attempting to connect to the PostgreSQL Hyperscale cluster: `SSL error: Received fatal alert: handshake_failure`.
 
    ![The Create Cluster screen is displayed, with the values specified above entered into the appropriate fields.](media/databricks-create-new-cluster.png 'Create a new Databricks cluster')
 
@@ -597,7 +601,7 @@ In this task, you will open a Databricks notebook and complete the instructions 
 
 Duration: 15 minutes
 
-In Wide World Importers's pipeline, they are storing event source data (clickstream time series data) in PostgreSQL, within the partitioned `events` table you created earlier. The next step of the pipeline is to aggregate this data into rollup tables so it can be efficiently accessed by their dashboard app or BI tools without impacting performance on the raw data tables.
+In Wide World Importers' pipeline, they are storing event source data (clickstream time series data) in PostgreSQL, within the partitioned `events` table you created earlier. The next step of the pipeline is to aggregate this data into rollup tables so it can be efficiently accessed by their dashboard app or BI tools without impacting performance on the raw data tables.
 
 Rollups are an integral piece of this solution because they provide fast, indexed lookups of aggregates where compute-heavy work is performed periodically in the background. Because these rollups are compact, they can easily be consumed by various clients and kept over longer periods of time.
 
@@ -864,9 +868,9 @@ In this exercise, you will connect to your PostgreSQL database cluster in [Power
 
 5. Enter the following in the form that follows, then click **Connect**:
 
-   - **User name**: enter **citus**.
-   - **Password**: enter your database password.
-   - **Select which level to apply these settings to**: leave at default value.
+   - **User name**: Enter **citus**.
+   - **Password**: Enter your database password.
+   - **Select which level to apply these settings to**: Leave at default value.
 
    ![The credentials form is displayed.](media/pbi-postgresql-server-creds.png 'PostgreSQL database')
 
@@ -969,7 +973,9 @@ In this exercise, you will delete any Azure resources that were created in suppo
 ### Task 1: Delete the resource group
 
 1. Using the [Azure portal](https://portal.azure.com), navigate to the Resource group you used throughout this hands-on lab by selecting Resource groups in the left menu.
+
 2. Search for the name of your resource group, and select it from the list.
+
 3. Select Delete in the command bar, and confirm the deletion by re-typing the Resource group name, and selecting Delete.
 
 You should follow all steps provided _after_ attending the Hands-on lab.
